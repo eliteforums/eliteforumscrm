@@ -104,29 +104,29 @@ export default function ContactsPage() {
     <AppLayout
       title="Contacts"
       actions={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 whitespace-nowrap">
           <CsvImportExport module="contacts" fields={CONTACT_FIELDS} data={contacts ?? []} onImport={handleCsvImport} />
           <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditingContact(null); }}>
             <DialogTrigger asChild>
-              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Contact</Button>
+              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Contact</span><span className="sm:hidden">Add</span></Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader><DialogTitle>{editingContact ? "Edit Contact" : "New Contact"}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>First Name</Label><Input name="first_name" defaultValue={editingContact?.first_name} /></div>
                   <div><Label>Last Name *</Label><Input name="last_name" required defaultValue={editingContact?.last_name} /></div>
                 </div>
                 <div><Label>Email</Label><Input name="email" type="email" defaultValue={editingContact?.email} /></div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Phone</Label><Input name="phone" defaultValue={editingContact?.phone} /></div>
                   <div><Label>Mobile</Label><Input name="mobile" defaultValue={editingContact?.mobile} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Title</Label><Input name="title" defaultValue={editingContact?.title} /></div>
                   <div><Label>Department</Label><Input name="department" defaultValue={editingContact?.department} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label>Lead Source</Label>
                     <select name="lead_source" defaultValue={editingContact?.lead_source || ""} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
@@ -157,8 +157,8 @@ export default function ContactsPage() {
         </div>
 
         {showFilters && (
-          <div className="flex flex-wrap gap-2 p-3 bg-card rounded-lg crm-shadow-card">
-            <div className="flex items-center gap-2">
+          <div className="overflow-x-auto pb-1">
+            <div className="flex items-center gap-2 p-3 bg-card rounded-lg crm-shadow-card w-max whitespace-nowrap">
               <span className="text-xs text-muted-foreground">Source:</span>
               {["all", ...LEAD_SOURCES].map((s) => (
                 <Button key={s} size="sm" variant={sourceFilter === s ? "default" : "outline"} onClick={() => setSourceFilter(s)} className="text-xs h-7">

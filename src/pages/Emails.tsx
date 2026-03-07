@@ -103,21 +103,21 @@ export default function EmailsPage() {
 
   return (
     <AppLayout title="Emails" actions={
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 whitespace-nowrap">
         {!emailConfig?.is_active && (
           <Link to="/settings">
             <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-              <Settings className="w-3.5 h-3.5" /> Configure Email
+              <Settings className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Configure Email</span><span className="sm:hidden">Config</span>
             </Button>
           </Link>
         )}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-2">
-              <Plus className="w-4 h-4" /> {emailConfig?.is_active ? "Send Email" : "Log Email"}
+              <Plus className="w-4 h-4" /> <span className="hidden sm:inline">{emailConfig?.is_active ? "Send Email" : "Log Email"}</span><span className="sm:hidden">{emailConfig?.is_active ? "Send" : "Log"}</span>
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{emailConfig?.is_active ? "Send Email" : "Log Email"}</DialogTitle>
             </DialogHeader>
@@ -158,12 +158,14 @@ export default function EmailsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input placeholder="Search emails..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
           </div>
-          <div className="flex gap-2">
-            {["all", "Outbound", "Inbound"].map((d) => (
-              <Button key={d} size="sm" variant={filter === d ? "default" : "outline"} onClick={() => setFilter(d)} className="text-xs">
-                {d === "all" ? "All" : d}
-              </Button>
-            ))}
+          <div className="overflow-x-auto pb-1">
+            <div className="flex w-max gap-2 whitespace-nowrap">
+              {["all", "Outbound", "Inbound"].map((d) => (
+                <Button key={d} size="sm" variant={filter === d ? "default" : "outline"} onClick={() => setFilter(d)} className="text-xs">
+                  {d === "all" ? "All" : d}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
 

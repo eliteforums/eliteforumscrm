@@ -80,12 +80,12 @@ export default function WorkflowsPage() {
   return (
     <AppLayout title="Workflow Automation" actions={
       <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}>
-        <DialogTrigger asChild><Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> New Rule</Button></DialogTrigger>
-        <DialogContent>
+        <DialogTrigger asChild><Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> <span className="hidden sm:inline">New Rule</span><span className="sm:hidden">New</span></Button></DialogTrigger>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader><DialogTitle>{editing ? "Edit Rule" : "New Workflow Rule"}</DialogTitle></DialogHeader>
           <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
             <div><Label>Rule Name *</Label><Input name="name" required defaultValue={editing?.name} placeholder="e.g., Auto-score new leads" /></div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div><Label>Module</Label>
                 <select name="module" defaultValue={editing?.module || "leads"} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
                   {MODULES.map((m) => <option key={m} value={m} className="capitalize">{m}</option>)}
@@ -121,19 +121,19 @@ export default function WorkflowsPage() {
         <div className="space-y-3">
           {rules?.map((rule) => (
             <div key={rule.id} className="bg-card rounded-xl p-5 crm-shadow-card hover:crm-shadow-card-hover transition-shadow">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex items-start gap-3 min-w-0">
                   <div className={`p-2 rounded-lg ${rule.is_active ? "bg-success/10" : "bg-muted"}`}>
                     <Zap className={`w-5 h-5 ${rule.is_active ? "text-success" : "text-muted-foreground"}`} />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-medium text-foreground">{rule.name}</h4>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="font-medium text-foreground break-words">{rule.name}</h4>
                       <Badge variant="secondary" className={rule.is_active ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"}>
                         {rule.is_active ? "Active" : "Inactive"}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm text-muted-foreground mt-1 break-words">
                       On <span className="font-medium">{rule.trigger_event}</span> in <span className="font-medium capitalize">{rule.module}</span>
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -141,7 +141,7 @@ export default function WorkflowsPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 self-end sm:self-auto shrink-0">
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toggleMutation.mutate({ id: rule.id, isActive: rule.is_active })} title={rule.is_active ? "Deactivate" : "Activate"}>
                     {rule.is_active ? <PowerOff className="w-4 h-4 text-warning" /> : <Power className="w-4 h-4 text-success" />}
                   </Button>

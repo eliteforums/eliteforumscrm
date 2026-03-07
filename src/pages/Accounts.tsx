@@ -114,17 +114,17 @@ export default function AccountsPage() {
     <AppLayout
       title="Accounts"
       actions={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 whitespace-nowrap">
           <CsvImportExport module="accounts" fields={ACCOUNT_FIELDS} data={accounts ?? []} onImport={handleCsvImport} />
           <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}>
             <DialogTrigger asChild>
-              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Account</Button>
+              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Account</span><span className="sm:hidden">Add</span></Button>
             </DialogTrigger>
-            <DialogContent className="max-h-[85vh] overflow-y-auto">
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader><DialogTitle>{editing ? "Edit Account" : "New Account"}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
                 <div><Label>Company Name *</Label><Input name="name" required defaultValue={editing?.name} /></div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label>Industry</Label>
                     <select name="industry" defaultValue={editing?.industry || ""} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
@@ -134,11 +134,11 @@ export default function AccountsPage() {
                   </div>
                   <div><Label>Employees</Label><Input name="employees" type="number" defaultValue={editing?.employees} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Website</Label><Input name="website" defaultValue={editing?.website} /></div>
                   <div><Label>Phone</Label><Input name="phone" defaultValue={editing?.phone} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Annual Revenue</Label><Input name="annual_revenue" type="number" step="0.01" defaultValue={editing?.annual_revenue} /></div>
                   <div>
                     <Label>Parent Account</Label>
@@ -169,13 +169,15 @@ export default function AccountsPage() {
         </div>
 
         {showFilters && (
-          <div className="flex flex-wrap gap-2 p-3 bg-card rounded-lg crm-shadow-card">
-            <span className="text-xs text-muted-foreground">Industry:</span>
-            {["all", ...INDUSTRIES].map((s) => (
-              <Button key={s} size="sm" variant={industryFilter === s ? "default" : "outline"} onClick={() => setIndustryFilter(s)} className="text-xs h-7">
-                {s === "all" ? "All" : s}
-              </Button>
-            ))}
+          <div className="overflow-x-auto pb-1">
+            <div className="flex w-max items-center gap-2 p-3 bg-card rounded-lg crm-shadow-card whitespace-nowrap">
+              <span className="text-xs text-muted-foreground">Industry:</span>
+              {["all", ...INDUSTRIES].map((s) => (
+                <Button key={s} size="sm" variant={industryFilter === s ? "default" : "outline"} onClick={() => setIndustryFilter(s)} className="text-xs h-7">
+                  {s === "all" ? "All" : s}
+                </Button>
+              ))}
+            </div>
           </div>
         )}
 

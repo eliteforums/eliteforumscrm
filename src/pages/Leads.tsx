@@ -201,32 +201,32 @@ export default function LeadsPage() {
     <AppLayout
       title="Leads"
       actions={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 whitespace-nowrap">
           <CsvImportExport module="leads" fields={LEAD_FIELDS} data={leads ?? []} onImport={handleCsvImport} />
           <Button variant="outline" size="sm" className="gap-1.5" onClick={() => scoreMutation.mutate()} disabled={scoreMutation.isPending}>
-            <Zap className="w-3.5 h-3.5" /> Score
+            <Zap className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Score</span><span className="sm:hidden">AI</span>
           </Button>
           <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditingLead(null); }}>
             <DialogTrigger asChild>
-              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Lead</Button>
+              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Lead</span><span className="sm:hidden">Add</span></Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader><DialogTitle>{editingLead ? "Edit Lead" : "New Lead"}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>First Name</Label><Input name="first_name" defaultValue={editingLead?.first_name} /></div>
                   <div><Label>Last Name *</Label><Input name="last_name" required defaultValue={editingLead?.last_name} /></div>
                 </div>
                 <div><Label>Company *</Label><Input name="company" required defaultValue={editingLead?.company} /></div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Email</Label><Input name="email" type="email" defaultValue={editingLead?.email} /></div>
                   <div><Label>Phone</Label><Input name="phone" defaultValue={editingLead?.phone} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Title</Label><Input name="title" defaultValue={editingLead?.title} /></div>
                   <div><Label>Industry</Label><Input name="industry" defaultValue={editingLead?.industry} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label>Lead Source</Label>
                     <select name="lead_source" defaultValue={editingLead?.lead_source || ""} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
@@ -264,17 +264,21 @@ export default function LeadsPage() {
 
         {showFilters && (
           <div className="flex flex-col gap-3 p-3 bg-card rounded-lg crm-shadow-card">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-muted-foreground">Status:</span>
-              {["all", ...LEAD_STATUSES].map((s) => (
-                <Button key={s} size="sm" variant={statusFilter === s ? "default" : "outline"} onClick={() => setStatusFilter(s)} className="text-xs h-7">{s === "all" ? "All" : s}</Button>
-              ))}
+            <div className="overflow-x-auto pb-1">
+              <div className="flex w-max items-center gap-2 whitespace-nowrap">
+                <span className="text-xs text-muted-foreground">Status:</span>
+                {["all", ...LEAD_STATUSES].map((s) => (
+                  <Button key={s} size="sm" variant={statusFilter === s ? "default" : "outline"} onClick={() => setStatusFilter(s)} className="text-xs h-7">{s === "all" ? "All" : s}</Button>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-muted-foreground">Source:</span>
-              {["all", ...LEAD_SOURCES].map((s) => (
-                <Button key={s} size="sm" variant={sourceFilter === s ? "default" : "outline"} onClick={() => setSourceFilter(s)} className="text-xs h-7">{s === "all" ? "All" : s}</Button>
-              ))}
+            <div className="overflow-x-auto pb-1">
+              <div className="flex w-max items-center gap-2 whitespace-nowrap">
+                <span className="text-xs text-muted-foreground">Source:</span>
+                {["all", ...LEAD_SOURCES].map((s) => (
+                  <Button key={s} size="sm" variant={sourceFilter === s ? "default" : "outline"} onClick={() => setSourceFilter(s)} className="text-xs h-7">{s === "all" ? "All" : s}</Button>
+                ))}
+              </div>
             </div>
           </div>
         )}
