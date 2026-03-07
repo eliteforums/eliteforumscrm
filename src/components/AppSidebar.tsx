@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, UserPlus, Building2, Handshake, Phone,
   ChevronLeft, ChevronRight, Zap, Shield, LogOut, Crown,
-  ClipboardList, FileText, Menu, X, Settings, History,
+  ClipboardList, FileText, Menu, X, Settings, History, BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
@@ -19,6 +19,7 @@ const navItems = [
   { title: "Calls", url: "/calls", icon: Phone },
   { title: "Tasks", url: "/tasks", icon: ClipboardList },
   { title: "Notes", url: "/notes", icon: FileText },
+  { title: "Reports", url: "/reports", icon: BarChart3 },
 ];
 
 const roleLabels: Record<string, string> = {
