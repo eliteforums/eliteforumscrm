@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Users, UserPlus, Building2, Handshake, Phone,
   ChevronLeft, ChevronRight, Zap, Shield, LogOut, Crown,
   ClipboardList, FileText, Menu, X, Settings, History, BarChart3,
+  Calendar, Mail, Workflow,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
@@ -17,8 +18,11 @@ const navItems = [
   { title: "Accounts", url: "/accounts", icon: Building2 },
   { title: "Deals", url: "/deals", icon: Handshake },
   { title: "Calls", url: "/calls", icon: Phone },
+  { title: "Meetings", url: "/meetings", icon: Calendar },
+  { title: "Emails", url: "/emails", icon: Mail },
   { title: "Tasks", url: "/tasks", icon: ClipboardList },
   { title: "Notes", url: "/notes", icon: FileText },
+  { title: "Workflows", url: "/workflows", icon: Workflow },
   { title: "Reports", url: "/reports", icon: BarChart3 },
 ];
 
@@ -60,16 +64,16 @@ export function AppSidebar() {
         </div>
       )}
 
-      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+      <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = location.pathname === item.url || (item.url !== "/dashboard" && location.pathname.startsWith(item.url));
           return (
             <NavLink key={item.title} to={item.url} end={item.url === "/dashboard"}
-              className={cn("flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent", collapsed && "justify-center px-0")}
+              className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent", collapsed && "justify-center px-0")}
               activeClassName="bg-sidebar-accent text-sidebar-accent-foreground"
               onClick={() => setMobileOpen(false)}
             >
-              <item.icon className={cn("w-5 h-5 flex-shrink-0", isActive && "text-sidebar-primary")} />
+              <item.icon className={cn("w-4.5 h-4.5 flex-shrink-0", isActive && "text-sidebar-primary")} />
               {!collapsed && <span>{item.title}</span>}
             </NavLink>
           );
@@ -78,15 +82,15 @@ export function AppSidebar() {
           <>
             <div className={cn("my-3 border-t border-sidebar-border", collapsed && "mx-2")} />
             <NavLink to="/admin" onClick={() => setMobileOpen(false)}
-              className={cn("flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent", collapsed && "justify-center px-0")}
+              className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent", collapsed && "justify-center px-0")}
               activeClassName="bg-sidebar-accent text-sidebar-accent-foreground">
-              <Shield className={cn("w-5 h-5 flex-shrink-0", location.pathname === "/admin" && "text-sidebar-primary")} />
+              <Shield className={cn("w-4.5 h-4.5 flex-shrink-0", location.pathname === "/admin" && "text-sidebar-primary")} />
               {!collapsed && <span>Admin Panel</span>}
             </NavLink>
             <NavLink to="/audit-trail" onClick={() => setMobileOpen(false)}
-              className={cn("flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent", collapsed && "justify-center px-0")}
+              className={cn("flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent", collapsed && "justify-center px-0")}
               activeClassName="bg-sidebar-accent text-sidebar-accent-foreground">
-              <History className={cn("w-5 h-5 flex-shrink-0", location.pathname === "/audit-trail" && "text-sidebar-primary")} />
+              <History className={cn("w-4.5 h-4.5 flex-shrink-0", location.pathname === "/audit-trail" && "text-sidebar-primary")} />
               {!collapsed && <span>Audit Trail</span>}
             </NavLink>
           </>
@@ -114,18 +118,15 @@ export function AppSidebar() {
 
   return (
     <>
-      {/* Mobile trigger */}
       <button onClick={() => setMobileOpen(true)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-card crm-shadow-card text-foreground">
         <Menu className="w-5 h-5" />
       </button>
 
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 bg-foreground/50 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
       )}
 
-      {/* Mobile sidebar */}
       <aside className={cn(
         "fixed inset-y-0 left-0 z-50 crm-gradient-sidebar flex flex-col w-[280px] transition-transform duration-300 lg:hidden",
         mobileOpen ? "translate-x-0" : "-translate-x-full"
@@ -133,10 +134,9 @@ export function AppSidebar() {
         {sidebarContent}
       </aside>
 
-      {/* Desktop sidebar */}
       <aside className={cn(
         "hidden lg:flex crm-gradient-sidebar flex-col h-screen sticky top-0 transition-all duration-300 z-40",
-        collapsed ? "w-[72px]" : "w-[260px]"
+        collapsed ? "w-[72px]" : "w-[240px]"
       )}>
         {sidebarContent}
       </aside>
