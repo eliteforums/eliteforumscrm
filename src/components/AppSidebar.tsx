@@ -19,7 +19,7 @@ const navItems = [
   { title: "Calls", url: "/calls", icon: Phone },
   { title: "Tasks", url: "/tasks", icon: ClipboardList },
   { title: "Notes", url: "/notes", icon: FileText },
-  { title: "Reports", url: "/reports", icon: LayoutDashboard },
+  { title: "Reports", url: "/reports", icon: BarChart3 },
 ];
 
 const roleLabels: Record<string, string> = {
