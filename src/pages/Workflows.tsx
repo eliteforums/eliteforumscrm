@@ -85,7 +85,7 @@ export default function WorkflowsPage() {
           <DialogHeader><DialogTitle>{editing ? "Edit Rule" : "New Workflow Rule"}</DialogTitle></DialogHeader>
           <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
             <div><Label>Rule Name *</Label><Input name="name" required defaultValue={editing?.name} placeholder="e.g., Auto-score new leads" /></div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div><Label>Module</Label>
                 <select name="module" defaultValue={editing?.module || "leads"} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
                   {MODULES.map((m) => <option key={m} value={m} className="capitalize">{m}</option>)}
