@@ -213,20 +213,20 @@ export default function LeadsPage() {
             <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader><DialogTitle>{editingLead ? "Edit Lead" : "New Lead"}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>First Name</Label><Input name="first_name" defaultValue={editingLead?.first_name} /></div>
                   <div><Label>Last Name *</Label><Input name="last_name" required defaultValue={editingLead?.last_name} /></div>
                 </div>
                 <div><Label>Company *</Label><Input name="company" required defaultValue={editingLead?.company} /></div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Email</Label><Input name="email" type="email" defaultValue={editingLead?.email} /></div>
                   <div><Label>Phone</Label><Input name="phone" defaultValue={editingLead?.phone} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Title</Label><Input name="title" defaultValue={editingLead?.title} /></div>
                   <div><Label>Industry</Label><Input name="industry" defaultValue={editingLead?.industry} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label>Lead Source</Label>
                     <select name="lead_source" defaultValue={editingLead?.lead_source || ""} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
