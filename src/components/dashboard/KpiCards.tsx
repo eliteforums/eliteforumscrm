@@ -1,4 +1,4 @@
-import { Users, UserPlus, DollarSign, Phone, TrendingUp, TrendingDown } from "lucide-react";
+import { Users, UserPlus, DollarSign, Phone, TrendingUp, TrendingDown, ClipboardList } from "lucide-react";
 
 interface KpiCardsProps {
   contactsCount: number;
@@ -6,67 +6,32 @@ interface KpiCardsProps {
   dealsTotal: number;
   dealsCount: number;
   callsCount: number;
+  tasksCount?: number;
 }
 
 const formatCurrency = (val: number) =>
   val >= 1000 ? `$${(val / 1000).toFixed(1)}k` : `$${val}`;
 
-export function KpiCards({ contactsCount, leadsCount, dealsTotal, dealsCount, callsCount }: KpiCardsProps) {
+export function KpiCards({ contactsCount, leadsCount, dealsTotal, dealsCount, callsCount, tasksCount = 0 }: KpiCardsProps) {
   const kpis = [
-    {
-      title: "Total Contacts",
-      value: contactsCount.toLocaleString(),
-      icon: Users,
-      change: "+12%",
-      positive: true,
-      color: "text-primary",
-      bg: "bg-primary/10",
-    },
-    {
-      title: "Active Leads",
-      value: leadsCount.toLocaleString(),
-      icon: UserPlus,
-      change: "+8%",
-      positive: true,
-      color: "text-accent",
-      bg: "bg-accent/10",
-    },
-    {
-      title: "Pipeline Value",
-      value: formatCurrency(dealsTotal),
-      subtitle: `${dealsCount} deals`,
-      icon: DollarSign,
-      change: "+23%",
-      positive: true,
-      color: "text-success",
-      bg: "bg-success/10",
-    },
-    {
-      title: "Calls Made",
-      value: callsCount.toLocaleString(),
-      icon: Phone,
-      change: "+5%",
-      positive: true,
-      color: "text-warning",
-      bg: "bg-warning/10",
-    },
+    { title: "Total Contacts", value: contactsCount.toLocaleString(), icon: Users, color: "text-primary", bg: "bg-primary/10" },
+    { title: "Active Leads", value: leadsCount.toLocaleString(), icon: UserPlus, color: "text-accent", bg: "bg-accent/10" },
+    { title: "Pipeline Value", value: formatCurrency(dealsTotal), subtitle: `${dealsCount} deals`, icon: DollarSign, color: "text-success", bg: "bg-success/10" },
+    { title: "Calls Made", value: callsCount.toLocaleString(), icon: Phone, color: "text-warning", bg: "bg-warning/10" },
+    { title: "Open Tasks", value: tasksCount.toLocaleString(), icon: ClipboardList, color: "text-info", bg: "bg-info/10" },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
       {kpis.map((kpi) => (
         <div key={kpi.title} className="crm-kpi-card">
-          <div className="flex items-start justify-between mb-4">
-            <div className={`${kpi.bg} p-2.5 rounded-lg`}>
-              <kpi.icon className={`w-5 h-5 ${kpi.color}`} />
-            </div>
-            <div className={`flex items-center gap-1 text-xs font-medium ${kpi.positive ? "text-success" : "text-destructive"}`}>
-              {kpi.positive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-              {kpi.change}
+          <div className="flex items-start justify-between mb-3">
+            <div className={`${kpi.bg} p-2 rounded-lg`}>
+              <kpi.icon className={`w-4 h-4 ${kpi.color}`} />
             </div>
           </div>
-          <div className="text-2xl font-display font-bold text-foreground">{kpi.value}</div>
-          <div className="text-sm text-muted-foreground mt-1">{kpi.title}</div>
+          <div className="text-xl md:text-2xl font-display font-bold text-foreground">{kpi.value}</div>
+          <div className="text-xs text-muted-foreground mt-1">{kpi.title}</div>
           {kpi.subtitle && <div className="text-xs text-muted-foreground">{kpi.subtitle}</div>}
         </div>
       ))}
