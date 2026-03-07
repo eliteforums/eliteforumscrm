@@ -103,6 +103,86 @@ export type Database = {
         }
         Relationships: []
       }
+      cadence_steps: {
+        Row: {
+          action_type: string
+          cadence_id: string
+          content: string | null
+          created_at: string
+          delay_days: number
+          id: string
+          step_number: number
+          subject: string | null
+        }
+        Insert: {
+          action_type?: string
+          cadence_id: string
+          content?: string | null
+          created_at?: string
+          delay_days?: number
+          id?: string
+          step_number?: number
+          subject?: string | null
+        }
+        Update: {
+          action_type?: string
+          cadence_id?: string
+          content?: string | null
+          created_at?: string
+          delay_days?: number
+          id?: string
+          step_number?: number
+          subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cadence_steps_cadence_id_fkey"
+            columns: ["cadence_id"]
+            isOneToOne: false
+            referencedRelation: "cadences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cadences: {
+        Row: {
+          completed_count: number | null
+          created_at: string
+          description: string | null
+          enrolled_count: number | null
+          id: string
+          name: string
+          status: string
+          total_steps: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_count?: number | null
+          created_at?: string
+          description?: string | null
+          enrolled_count?: number | null
+          id?: string
+          name: string
+          status?: string
+          total_steps?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_count?: number | null
+          created_at?: string
+          description?: string | null
+          enrolled_count?: number | null
+          id?: string
+          name?: string
+          status?: string
+          total_steps?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       calls: {
         Row: {
           call_duration: number | null
@@ -418,6 +498,90 @@ export type Database = {
           },
         ]
       }
+      forecasts: {
+        Row: {
+          best_case: number | null
+          closed: number | null
+          committed: number | null
+          created_at: string
+          id: string
+          month: number | null
+          period: string
+          quarter: number | null
+          quota: number | null
+          updated_at: string
+          user_id: string
+          year: number
+        }
+        Insert: {
+          best_case?: number | null
+          closed?: number | null
+          committed?: number | null
+          created_at?: string
+          id?: string
+          month?: number | null
+          period: string
+          quarter?: number | null
+          quota?: number | null
+          updated_at?: string
+          user_id: string
+          year: number
+        }
+        Update: {
+          best_case?: number | null
+          closed?: number | null
+          committed?: number | null
+          created_at?: string
+          id?: string
+          month?: number | null
+          period?: string
+          quarter?: number | null
+          quota?: number | null
+          updated_at?: string
+          user_id?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      journeys: {
+        Row: {
+          created_at: string
+          description: string | null
+          enrolled_count: number | null
+          id: string
+          name: string
+          stages: Json | null
+          status: string
+          trigger_type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          enrolled_count?: number | null
+          id?: string
+          name: string
+          stages?: Json | null
+          status?: string
+          trigger_type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          enrolled_count?: number | null
+          id?: string
+          name?: string
+          stages?: Json | null
+          status?: string
+          trigger_type?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           annual_revenue: number | null
@@ -637,6 +801,45 @@ export type Database = {
           },
         ]
       }
+      products: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          sku: string | null
+          unit_price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          sku?: string | null
+          unit_price?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          sku?: string | null
+          unit_price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -663,6 +866,186 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      quote_items: {
+        Row: {
+          created_at: string
+          description: string
+          discount_percent: number | null
+          id: string
+          product_id: string | null
+          quantity: number
+          quote_id: string
+          sort_order: number | null
+          total: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          discount_percent?: number | null
+          id?: string
+          product_id?: string | null
+          quantity?: number
+          quote_id: string
+          sort_order?: number | null
+          total?: number
+          unit_price?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          discount_percent?: number | null
+          id?: string
+          product_id?: string | null
+          quantity?: number
+          quote_id?: string
+          sort_order?: number | null
+          total?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_items_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quotes: {
+        Row: {
+          account_id: string | null
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          discount_percent: number | null
+          id: string
+          notes: string | null
+          quote_number: string
+          status: string
+          subtotal: number
+          tax_percent: number | null
+          terms: string | null
+          title: string
+          total: number
+          updated_at: string
+          user_id: string
+          valid_until: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          discount_percent?: number | null
+          id?: string
+          notes?: string | null
+          quote_number: string
+          status?: string
+          subtotal?: number
+          tax_percent?: number | null
+          terms?: string | null
+          title: string
+          total?: number
+          updated_at?: string
+          user_id: string
+          valid_until?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          discount_percent?: number | null
+          id?: string
+          notes?: string | null
+          quote_number?: string
+          status?: string
+          subtotal?: number
+          tax_percent?: number | null
+          terms?: string | null
+          title?: string
+          total?: number
+          updated_at?: string
+          user_id?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      social_messages: {
+        Row: {
+          channel: string
+          contact_id: string | null
+          created_at: string
+          direction: string
+          id: string
+          message: string
+          metadata: Json | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          channel?: string
+          contact_id?: string | null
+          created_at?: string
+          direction?: string
+          id?: string
+          message: string
+          metadata?: Json | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          contact_id?: string | null
+          created_at?: string
+          direction?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_messages_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tasks: {
         Row: {
@@ -730,6 +1113,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      territories: {
+        Row: {
+          assigned_users: string[] | null
+          country: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          region: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_users?: string[] | null
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          region?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_users?: string[] | null
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          region?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
