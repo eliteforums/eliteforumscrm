@@ -8,10 +8,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Mail, Send, Inbox, Trash2, Search, Clock } from "lucide-react";
+import { Plus, Mail, Send, Inbox, Trash2, Search, Clock, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
+import { Link } from "react-router-dom";
 
 export default function EmailsPage() {
   const { user } = useAuth();
@@ -19,6 +20,7 @@ export default function EmailsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [sending, setSending] = useState(false);
 
   const { data: emails, isLoading } = useQuery({
     queryKey: ["emails", search, filter],
@@ -32,6 +34,15 @@ export default function EmailsPage() {
     },
   });
 
+  const { data: emailConfig } = useQuery({
+    queryKey: ["email-config-status"],
+    queryFn: async () => {
+      const { data } = await supabase.from("email_config").select("is_active, provider").eq("user_id", user!.id).eq("is_active", true).maybeSingle();
+      return data;
+    },
+    enabled: !!user,
+  });
+
   const { data: contacts } = useQuery({
     queryKey: ["contacts-for-emails"],
     queryFn: async () => { const { data } = await supabase.from("contacts").select("id, first_name, last_name, email"); return data ?? []; },
@@ -39,25 +50,47 @@ export default function EmailsPage() {
 
   const sendMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const email = {
-        user_id: user!.id,
-        subject: formData.get("subject") as string,
-        body: formData.get("body") as string,
-        to_address: formData.get("to_address") as string,
-        from_address: user!.email || "",
-        direction: "Outbound",
-        status: "Sent",
-        contact_id: (formData.get("contact_id") as string) || null,
-      };
-      const { error } = await supabase.from("emails").insert(email);
-      if (error) throw error;
+      const toAddress = formData.get("to_address") as string;
+      const subject = formData.get("subject") as string;
+      const body = formData.get("body") as string;
+      const contactId = (formData.get("contact_id") as string) || null;
+
+      if (emailConfig?.is_active) {
+        // Send via configured provider
+        const { data, error } = await supabase.functions.invoke("send-email", {
+          body: { to: toAddress, subject, html: body },
+        });
+        if (error) throw error;
+        if (data?.error) throw new Error(data.error);
+        // Update the logged email with contact_id if provided
+        if (contactId) {
+          const { data: latestEmails } = await supabase.from("emails").select("id").eq("user_id", user!.id).order("created_at", { ascending: false }).limit(1);
+          if (latestEmails?.[0]) {
+            await supabase.from("emails").update({ contact_id: contactId }).eq("id", latestEmails[0].id);
+          }
+        }
+      } else {
+        // Just log without sending
+        const email = {
+          user_id: user!.id,
+          subject,
+          body,
+          to_address: toAddress,
+          from_address: user!.email || "",
+          direction: "Outbound",
+          status: "Logged",
+          contact_id: contactId,
+        };
+        const { error } = await supabase.from("emails").insert(email);
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["emails"] });
       setIsOpen(false);
-      toast.success("Email logged");
+      toast.success(emailConfig?.is_active ? "Email sent!" : "Email logged");
     },
-    onError: () => toast.error("Failed to log email"),
+    onError: (err: Error) => toast.error(err.message || "Failed to send email"),
   });
 
   const deleteMutation = useMutation({
@@ -70,24 +103,54 @@ export default function EmailsPage() {
 
   return (
     <AppLayout title="Emails" actions={
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild><Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Log Email</Button></DialogTrigger>
-        <DialogContent>
-          <DialogHeader><DialogTitle>Log Email</DialogTitle></DialogHeader>
-          <form onSubmit={(e) => { e.preventDefault(); sendMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
-            <div><Label>To *</Label><Input name="to_address" type="email" required placeholder="recipient@company.com" /></div>
-            <div><Label>Subject *</Label><Input name="subject" required placeholder="Email subject" /></div>
-            <div><Label>Link to Contact</Label>
-              <select name="contact_id" className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
-                <option value="">None</option>
-                {contacts?.map((c) => <option key={c.id} value={c.id}>{c.first_name} {c.last_name} ({c.email})</option>)}
-              </select>
-            </div>
-            <div><Label>Body</Label><Textarea name="body" rows={5} placeholder="Email content..." /></div>
-            <Button type="submit" className="w-full gap-2" disabled={sendMutation.isPending}><Send className="w-4 h-4" /> Log Email</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <div className="flex items-center gap-2">
+        {!emailConfig?.is_active && (
+          <Link to="/settings">
+            <Button size="sm" variant="outline" className="gap-1.5 text-xs">
+              <Settings className="w-3.5 h-3.5" /> Configure Email
+            </Button>
+          </Link>
+        )}
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" className="gap-2">
+              <Plus className="w-4 h-4" /> {emailConfig?.is_active ? "Send Email" : "Log Email"}
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{emailConfig?.is_active ? "Send Email" : "Log Email"}</DialogTitle>
+            </DialogHeader>
+            {emailConfig?.is_active && (
+              <div className="flex items-center gap-2 p-2 bg-success/10 rounded-lg text-xs text-success">
+                <Mail className="w-3.5 h-3.5" />
+                Sending via {emailConfig.provider === "resend" ? "Resend" : "SMTP"}
+              </div>
+            )}
+            {!emailConfig?.is_active && (
+              <div className="flex items-center gap-2 p-2 bg-warning/10 rounded-lg text-xs text-warning">
+                <Mail className="w-3.5 h-3.5" />
+                No email provider configured — this will only log the email.
+                <Link to="/settings" className="underline ml-1">Configure</Link>
+              </div>
+            )}
+            <form onSubmit={(e) => { e.preventDefault(); sendMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
+              <div><Label>To *</Label><Input name="to_address" type="email" required placeholder="recipient@company.com" /></div>
+              <div><Label>Subject *</Label><Input name="subject" required placeholder="Email subject" /></div>
+              <div><Label>Link to Contact</Label>
+                <select name="contact_id" className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
+                  <option value="">None</option>
+                  {contacts?.map((c) => <option key={c.id} value={c.id}>{c.first_name} {c.last_name} ({c.email})</option>)}
+                </select>
+              </div>
+              <div><Label>Body</Label><Textarea name="body" rows={5} placeholder="Email content..." /></div>
+              <Button type="submit" className="w-full gap-2" disabled={sendMutation.isPending}>
+                <Send className="w-4 h-4" /> {emailConfig?.is_active ? "Send Email" : "Log Email"}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
     }>
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -107,7 +170,7 @@ export default function EmailsPage() {
         {isLoading ? <div className="text-center py-12 text-muted-foreground">Loading...</div> : emails?.length === 0 ? (
           <div className="bg-card rounded-xl p-12 text-center text-muted-foreground crm-shadow-card">
             <Mail className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            No emails logged yet. Log your first email!
+            No emails logged yet. {emailConfig?.is_active ? "Send your first email!" : "Log your first email or configure email sending in Settings!"}
           </div>
         ) : (
           <div className="space-y-2">
