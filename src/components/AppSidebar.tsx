@@ -11,7 +11,14 @@ import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/hooks/useAuth";
 import { Badge } from "@/components/ui/badge";
 
-const navItems = [
+type NavItem = {
+  title: string;
+  url: string;
+  icon: any;
+  minRole?: "employee" | "manager" | "admin" | "super_admin";
+};
+
+const navItems: NavItem[] = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Contacts", url: "/contacts", icon: Users },
   { title: "Leads", url: "/leads", icon: UserPlus },
@@ -22,8 +29,8 @@ const navItems = [
   { title: "Emails", url: "/emails", icon: Mail },
   { title: "Tasks", url: "/tasks", icon: ClipboardList },
   { title: "Notes", url: "/notes", icon: FileText },
-  { title: "Workflows", url: "/workflows", icon: Workflow },
-  { title: "Reports", url: "/reports", icon: BarChart3 },
+  { title: "Workflows", url: "/workflows", icon: Workflow, minRole: "manager" },
+  { title: "Reports", url: "/reports", icon: BarChart3, minRole: "manager" },
   { title: "AI Assistant", url: "/ai-assistant", icon: Bot },
 ];
 
@@ -35,11 +42,22 @@ const roleColors: Record<string, string> = {
   manager: "bg-accent/20 text-accent", employee: "bg-warning/20 text-warning",
 };
 
+const roleHierarchy: Record<string, number> = {
+  employee: 1, manager: 2, admin: 3, super_admin: 4,
+};
+
+function hasMinRole(userRole: string | null, minRole?: string): boolean {
+  if (!minRole) return true;
+  return (roleHierarchy[userRole ?? "employee"] ?? 1) >= (roleHierarchy[minRole] ?? 1);
+}
+
 export function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { role, isSuperAdmin, isAdmin, signOut, user } = useAuth();
+
+  const visibleNavItems = navItems.filter(item => hasMinRole(role, item.minRole));
 
   const sidebarContent = (
     <>
@@ -66,7 +84,7 @@ export function AppSidebar() {
       )}
 
       <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto">
-        {navItems.map((item) => {
+        {visibleNavItems.map((item) => {
           const isActive = location.pathname === item.url || (item.url !== "/dashboard" && location.pathname.startsWith(item.url));
           return (
             <NavLink key={item.title} to={item.url} end={item.url === "/dashboard"}
