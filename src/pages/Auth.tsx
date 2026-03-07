@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Zap, Mail, Lock, Loader2 } from "lucide-react";
+import { Zap, Mail, Lock, Loader2, User, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AuthPage() {
@@ -12,13 +13,14 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       if (isSignUp) {
-        await signUp(email, password);
+        await signUp(email, password, fullName);
         toast.success("Account created! Check your email to confirm.");
       } else {
         await signIn(email, password);
@@ -34,6 +36,12 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
+        <div className="mb-6">
+          <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to home
+          </Link>
+        </div>
+
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-2xl crm-gradient-primary flex items-center justify-center mx-auto mb-4">
             <Zap className="w-7 h-7 text-primary-foreground" />
@@ -46,6 +54,20 @@ export default function AuthPage() {
 
         <div className="bg-card rounded-xl p-6 crm-shadow-card">
           <form onSubmit={handleSubmit} className="space-y-4">
+            {isSignUp && (
+              <div>
+                <Label>Full Name</Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder="John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+              </div>
+            )}
             <div>
               <Label>Email</Label>
               <div className="relative">
