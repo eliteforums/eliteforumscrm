@@ -297,6 +297,57 @@ export type Database = {
           },
         ]
       }
+      email_config: {
+        Row: {
+          created_at: string
+          from_email: string | null
+          from_name: string | null
+          id: string
+          is_active: boolean
+          provider: string
+          resend_api_key: string | null
+          smtp_encryption: string | null
+          smtp_host: string | null
+          smtp_password: string | null
+          smtp_port: number | null
+          smtp_username: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          from_email?: string | null
+          from_name?: string | null
+          id?: string
+          is_active?: boolean
+          provider?: string
+          resend_api_key?: string | null
+          smtp_encryption?: string | null
+          smtp_host?: string | null
+          smtp_password?: string | null
+          smtp_port?: number | null
+          smtp_username?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          from_email?: string | null
+          from_name?: string | null
+          id?: string
+          is_active?: boolean
+          provider?: string
+          resend_api_key?: string | null
+          smtp_encryption?: string | null
+          smtp_host?: string | null
+          smtp_password?: string | null
+          smtp_port?: number | null
+          smtp_username?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       emails: {
         Row: {
           body: string | null
