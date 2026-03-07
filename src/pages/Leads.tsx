@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Search, Trash2, Edit } from "lucide-react";
+import { Plus, Search, Trash2, Edit, ArrowRightLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -83,6 +83,38 @@ export default function LeadsPage() {
       queryClient.invalidateQueries({ queryKey: ["leads"] });
       toast.success("Lead deleted");
     },
+  });
+
+  const convertMutation = useMutation({
+    mutationFn: async (lead: any) => {
+      // Create Account
+      const { data: account, error: accErr } = await supabase.from("accounts").insert({
+        user_id: user!.id, name: lead.company, industry: lead.industry,
+      }).select().single();
+      if (accErr) throw accErr;
+
+      // Create Contact
+      const { data: contact, error: conErr } = await supabase.from("contacts").insert({
+        user_id: user!.id, first_name: lead.first_name, last_name: lead.last_name,
+        email: lead.email, phone: lead.phone, title: lead.title,
+        account_id: account.id, lead_source: lead.lead_source,
+      }).select().single();
+      if (conErr) throw conErr;
+
+      // Mark lead as converted
+      const { error: updErr } = await supabase.from("leads").update({
+        converted: true, lead_status: "Converted",
+        converted_account_id: account.id, converted_contact_id: contact.id,
+      }).eq("id", lead.id);
+      if (updErr) throw updErr;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      queryClient.invalidateQueries({ queryKey: ["contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      toast.success("Lead converted to Contact + Account!");
+    },
+    onError: () => toast.error("Conversion failed"),
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

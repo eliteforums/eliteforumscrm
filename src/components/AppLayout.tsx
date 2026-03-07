@@ -1,5 +1,5 @@
 import { AppSidebar } from "@/components/AppSidebar";
-import { Bell, Search, Plus } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -14,20 +14,14 @@ export function AppLayout({ children, title, actions }: AppLayoutProps) {
     <div className="flex min-h-screen w-full bg-background">
       <AppSidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top Bar */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-30">
-          <div className="flex items-center gap-4">
-            {title && (
-              <h1 className="text-lg font-display font-bold text-foreground">{title}</h1>
-            )}
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-30">
+          <div className="flex items-center gap-4 pl-10 lg:pl-0">
+            {title && <h1 className="text-lg font-display font-bold text-foreground truncate">{title}</h1>}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Search..."
-                className="pl-9 w-64 h-9 bg-secondary border-none text-sm"
-              />
+              <Input placeholder="Search..." className="pl-9 w-48 lg:w-64 h-9 bg-secondary border-none text-sm" />
             </div>
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="w-5 h-5 text-muted-foreground" />
@@ -36,9 +30,7 @@ export function AppLayout({ children, title, actions }: AppLayoutProps) {
             {actions}
           </div>
         </header>
-
-        {/* Content */}
-        <main className="flex-1 p-6 animate-fade-in">
+        <main className="flex-1 p-4 md:p-6 animate-fade-in">
           {children}
         </main>
       </div>

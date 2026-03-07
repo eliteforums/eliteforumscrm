@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/AppLayout";
@@ -14,6 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function ContactsPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -164,8 +166,8 @@ export default function ContactsPage() {
                 <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">No contacts yet. Add your first contact!</TableCell></TableRow>
               ) : (
                 contacts?.map((c) => (
-                  <TableRow key={c.id} className="hover:bg-secondary/30">
-                    <TableCell className="font-medium">
+                  <TableRow key={c.id} className="hover:bg-secondary/30 cursor-pointer" onClick={() => navigate(`/contacts/${c.id}`)}>
+                    <TableCell className="font-medium text-primary hover:underline">
                       {c.first_name} {c.last_name}
                     </TableCell>
                     <TableCell>
