@@ -24,9 +24,19 @@ import AuthPage from "./pages/Auth";
 import MeetingsPage from "./pages/Meetings";
 import EmailsPage from "./pages/Emails";
 import WorkflowsPage from "./pages/Workflows";
+import AiAssistantPage from "./pages/AiAssistant";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes cache
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
