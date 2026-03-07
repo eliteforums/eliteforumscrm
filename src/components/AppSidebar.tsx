@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, UserPlus, Building2, Handshake, Phone,
   ChevronLeft, ChevronRight, Zap, Shield, LogOut, Crown,
   ClipboardList, FileText, Menu, X, Settings, History, BarChart3,
-  Calendar, Mail, Workflow,
+  Calendar, Mail, Workflow, Bot,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
@@ -24,6 +24,7 @@ const navItems = [
   { title: "Notes", url: "/notes", icon: FileText },
   { title: "Workflows", url: "/workflows", icon: Workflow },
   { title: "Reports", url: "/reports", icon: BarChart3 },
+  { title: "AI Assistant", url: "/ai-assistant", icon: Bot },
 ];
 
 const roleLabels: Record<string, string> = {

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   UserPlus, Building2, Handshake, FileText, BarChart3,
-  Shield, History, Settings, LogOut,
+  Shield, History, Settings, LogOut, Bot, Calendar, Mail, Workflow,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -21,8 +21,12 @@ const moreItems = [
   { label: "Leads", icon: UserPlus, path: "/leads" },
   { label: "Accounts", icon: Building2, path: "/accounts" },
   { label: "Deals", icon: Handshake, path: "/deals" },
+  { label: "Meetings", icon: Calendar, path: "/meetings" },
+  { label: "Emails", icon: Mail, path: "/emails" },
   { label: "Notes", icon: FileText, path: "/notes" },
+  { label: "Workflows", icon: Workflow, path: "/workflows" },
   { label: "Reports", icon: BarChart3, path: "/reports" },
+  { label: "AI Assistant", icon: Bot, path: "/ai-assistant" },
   { label: "Settings", icon: Settings, path: "/settings" },
 ];
 

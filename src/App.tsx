@@ -24,9 +24,19 @@ import AuthPage from "./pages/Auth";
 import MeetingsPage from "./pages/Meetings";
 import EmailsPage from "./pages/Emails";
 import WorkflowsPage from "./pages/Workflows";
+import AiAssistantPage from "./pages/AiAssistant";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes cache
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -50,7 +60,7 @@ function LandingRoute() {
 }
 
 const App = () => (
-  <ThemeProvider defaultTheme="system" storageKey="elite-crm-theme">
+  <ThemeProvider defaultTheme="light" storageKey="elite-crm-theme">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
@@ -76,6 +86,7 @@ const App = () => (
               <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
               <Route path="/audit-trail" element={<ProtectedRoute><AuditTrailPage /></ProtectedRoute>} />
+              <Route path="/ai-assistant" element={<ProtectedRoute><AiAssistantPage /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
