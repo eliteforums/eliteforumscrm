@@ -124,7 +124,7 @@ export default function AccountsPage() {
               <DialogHeader><DialogTitle>{editing ? "Edit Account" : "New Account"}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
                 <div><Label>Company Name *</Label><Input name="name" required defaultValue={editing?.name} /></div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label>Industry</Label>
                     <select name="industry" defaultValue={editing?.industry || ""} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
@@ -134,11 +134,11 @@ export default function AccountsPage() {
                   </div>
                   <div><Label>Employees</Label><Input name="employees" type="number" defaultValue={editing?.employees} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Website</Label><Input name="website" defaultValue={editing?.website} /></div>
                   <div><Label>Phone</Label><Input name="phone" defaultValue={editing?.phone} /></div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><Label>Annual Revenue</Label><Input name="annual_revenue" type="number" step="0.01" defaultValue={editing?.annual_revenue} /></div>
                   <div>
                     <Label>Parent Account</Label>
