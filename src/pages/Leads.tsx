@@ -132,17 +132,30 @@ export default function LeadsPage() {
 
   const convertMutation = useMutation({
     mutationFn: async (lead: any) => {
+      // Create Account
       const { data: account, error: accErr } = await supabase.from("accounts").insert({
         user_id: user!.id, name: lead.company, industry: lead.industry,
         annual_revenue: lead.annual_revenue,
       }).select().single();
       if (accErr) throw accErr;
+      // Create Contact
       const { data: contact, error: conErr } = await supabase.from("contacts").insert({
         user_id: user!.id, first_name: lead.first_name, last_name: lead.last_name,
         email: lead.email, phone: lead.phone, title: lead.title,
         account_id: account.id, lead_source: lead.lead_source,
       }).select().single();
       if (conErr) throw conErr;
+      // Optionally create a Deal/Opportunity
+      const { error: dealErr } = await supabase.from("deals").insert({
+        user_id: user!.id,
+        name: `${lead.company} - Opportunity`,
+        stage: "Qualification",
+        contact_id: contact.id,
+        account_id: account.id,
+        lead_source: lead.lead_source,
+      });
+      if (dealErr) throw dealErr;
+      // Update Lead as converted
       const { error: updErr } = await supabase.from("leads").update({
         converted: true, lead_status: "Converted",
         converted_account_id: account.id, converted_contact_id: contact.id,
@@ -153,7 +166,8 @@ export default function LeadsPage() {
       queryClient.invalidateQueries({ queryKey: ["leads"] });
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      toast.success("Lead converted to Contact + Account!");
+      queryClient.invalidateQueries({ queryKey: ["deals"] });
+      toast.success("Lead converted to Contact + Account + Deal!");
     },
     onError: () => toast.error("Conversion failed"),
   });
