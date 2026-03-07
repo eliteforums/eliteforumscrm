@@ -1,20 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Search, Trash2, Edit, PhoneCall, PhoneIncoming, PhoneOutgoing, Clock } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Search, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
-import { formatDistanceToNow, format } from "date-fns";
-
-const CALL_PURPOSES = ["Prospecting", "Follow-up", "Support", "Demo", "Negotiation", "Administrative"];
+import { CallStats } from "@/components/calls/CallStats";
+import { CallTimeline } from "@/components/calls/CallTimeline";
+import { QuickDialer } from "@/components/calls/QuickDialer";
+import { LogCallDialog } from "@/components/calls/LogCallDialog";
+import { CallWrapUpDialog } from "@/components/calls/CallWrapUpDialog";
 
 export default function CallsPage() {
   const { user } = useAuth();
@@ -22,6 +20,13 @@ export default function CallsPage() {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [editing, setEditing] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState("timeline");
+
+  // Click-to-call state
+  const [callWrapOpen, setCallWrapOpen] = useState(false);
+  const [callStartTime, setCallStartTime] = useState<Date | null>(null);
+  const [callingContactId, setCallingContactId] = useState<string | null>(null);
+  const [callingContactName, setCallingContactName] = useState("");
 
   const { data: calls, isLoading } = useQuery({
     queryKey: ["calls-list", search],
@@ -39,6 +44,49 @@ export default function CallsPage() {
     queryFn: async () => {
       const { data } = await supabase.from("contacts").select("id, first_name, last_name");
       return data ?? [];
+    },
+  });
+
+  // Handle return from phone dialer
+  const handleCallStart = useCallback((contactId: string, phone: string, contactName: string) => {
+    setCallingContactId(contactId);
+    setCallingContactName(contactName);
+    setCallStartTime(new Date());
+  }, []);
+
+  useEffect(() => {
+    if (!callStartTime) return;
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible" && callStartTime) {
+        setCallWrapOpen(true);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, [callStartTime]);
+
+  const wrapUpMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const duration = callStartTime ? Math.floor((Date.now() - callStartTime.getTime()) / 1000) : 0;
+      const { error } = await supabase.from("calls").insert({
+        user_id: user!.id,
+        contact_id: callingContactId,
+        subject: formData.get("subject") as string || "Phone call",
+        call_type: "Outbound",
+        call_result: formData.get("call_result") as string,
+        call_duration: duration,
+        description: formData.get("description") as string,
+        status: "Completed",
+        call_start_time: callStartTime?.toISOString() || new Date().toISOString(),
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["calls-list"] });
+      setCallWrapOpen(false);
+      setCallStartTime(null);
+      setCallingContactId(null);
+      toast.success("Call logged!");
     },
   });
 
@@ -65,8 +113,6 @@ export default function CallsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["calls-list"] });
-      queryClient.invalidateQueries({ queryKey: ["calls-count"] });
-      queryClient.invalidateQueries({ queryKey: ["recent-calls"] });
       setIsOpen(false);
       setEditing(null);
       toast.success(editing ? "Call updated" : "Call logged");
@@ -74,159 +120,76 @@ export default function CallsPage() {
     onError: () => toast.error("Failed to save call"),
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from("calls").delete().eq("id", id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["calls-list"] });
-      toast.success("Call deleted");
-    },
-  });
-
-  const formatDuration = (seconds: number) => {
-    if (!seconds) return "-";
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}m ${s}s`;
-  };
-
   return (
     <AppLayout
-      title="Call Logs"
+      title="Call Hub"
       actions={
-        <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}>
-          <DialogTrigger asChild>
-            <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Log Call</Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-lg">
-            <DialogHeader><DialogTitle>{editing ? "Edit Call" : "Log New Call"}</DialogTitle></DialogHeader>
-            <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
-              <div><Label>Subject *</Label><Input name="subject" required defaultValue={editing?.subject} /></div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Type</Label>
-                  <select name="call_type" defaultValue={editing?.call_type || "Outbound"} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
-                    <option value="Outbound">Outbound</option>
-                    <option value="Inbound">Inbound</option>
-                  </select>
-                </div>
-                <div>
-                  <Label>Purpose</Label>
-                  <select name="call_purpose" defaultValue={editing?.call_purpose || ""} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
-                    <option value="">Select...</option>
-                    {CALL_PURPOSES.map((p) => <option key={p} value={p}>{p}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Contact</Label>
-                  <select name="contact_id" defaultValue={editing?.contact_id || ""} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
-                    <option value="">None</option>
-                    {contacts?.map((c) => <option key={c.id} value={c.id}>{c.first_name} {c.last_name}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <Label>Duration (seconds)</Label>
-                  <Input name="call_duration" type="number" min="0" defaultValue={editing?.call_duration ?? 0} />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Result</Label>
-                  <Input name="call_result" defaultValue={editing?.call_result} />
-                </div>
-                <div>
-                  <Label>Status</Label>
-                  <select name="status" defaultValue={editing?.status || "Completed"} className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                  </select>
-                </div>
-              </div>
-              <div><Label>Notes</Label><Textarea name="description" rows={3} defaultValue={editing?.description} /></div>
-              <Button type="submit" className="w-full" disabled={saveMutation.isPending}>{editing ? "Update" : "Log"} Call</Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Button size="sm" className="gap-2" onClick={() => { setEditing(null); setIsOpen(true); }}>
+          <Plus className="w-4 h-4" /> Log Call
+        </Button>
       }
     >
       <div className="space-y-4">
-        <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input placeholder="Search calls..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
-        </div>
-        <div className="bg-card rounded-xl crm-shadow-card overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Subject</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Purpose</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-20">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Loading...</TableCell></TableRow>
-              ) : calls?.length === 0 ? (
-                <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No calls logged yet.</TableCell></TableRow>
-              ) : (
-                calls?.map((call) => (
-                  <TableRow key={call.id} className="hover:bg-secondary/30">
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <PhoneCall className="w-4 h-4 text-primary" />
-                        {call.subject}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className={call.call_type === "Inbound" ? "bg-success/10 text-success" : "bg-info/10 text-info"}>
-                        {call.call_type === "Inbound" ? <PhoneIncoming className="w-3 h-3 mr-1" /> : <PhoneOutgoing className="w-3 h-3 mr-1" />}
-                        {call.call_type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {call.contacts ? `${call.contacts.first_name ?? ""} ${call.contacts.last_name}` : "-"}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{call.call_purpose || "-"}</TableCell>
-                    <TableCell>
-                      <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Clock className="w-3 h-3" />
-                        {formatDuration(call.call_duration ?? 0)}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {format(new Date(call.call_start_time), "MMM d, h:mm a")}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary" className={call.status === "Completed" ? "bg-success/10 text-success" : "bg-warning/10 text-warning"}>
-                        {call.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditing(call); setIsOpen(true); }}>
-                          <Edit className="w-3.5 h-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(call.id)}>
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <CallStats calls={calls ?? []} />
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="w-full grid grid-cols-2 sm:w-auto sm:inline-grid">
+            <TabsTrigger value="timeline">Timeline</TabsTrigger>
+            <TabsTrigger value="dialer" className="gap-1.5">
+              <Phone className="w-3.5 h-3.5" /> Quick Dial
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="timeline" className="mt-4 space-y-3">
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input placeholder="Search calls..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+            </div>
+            {isLoading ? (
+              <div className="text-center py-8 text-muted-foreground">Loading...</div>
+            ) : (
+              <CallTimeline
+                calls={calls ?? []}
+                onEdit={(call) => { setEditing(call); setIsOpen(true); }}
+              />
+            )}
+          </TabsContent>
+
+          <TabsContent value="dialer" className="mt-4">
+            <div className="bg-card rounded-xl p-4 crm-shadow-card">
+              <QuickDialer onCallStart={handleCallStart} />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
+
+      <LogCallDialog
+        open={isOpen}
+        onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}
+        editing={editing}
+        contacts={contacts ?? []}
+        onSubmit={(fd) => saveMutation.mutate(fd)}
+        isPending={saveMutation.isPending}
+      />
+
+      <CallWrapUpDialog
+        open={callWrapOpen}
+        onOpenChange={setCallWrapOpen}
+        contactName={callingContactName}
+        callStartTime={callStartTime}
+        onSubmit={(fd) => wrapUpMutation.mutate(fd)}
+        isPending={wrapUpMutation.isPending}
+        onSkip={() => { setCallWrapOpen(false); setCallStartTime(null); setCallingContactId(null); }}
+      />
+
+      {/* Mobile FAB for quick call */}
+      <button
+        onClick={() => setActiveTab("dialer")}
+        className="lg:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center active:scale-95 transition-transform"
+        aria-label="Quick Dial"
+      >
+        <Phone className="w-6 h-6" />
+      </button>
     </AppLayout>
   );
 }
