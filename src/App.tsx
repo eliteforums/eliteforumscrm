@@ -10,10 +10,12 @@ import ContactsPage from "./pages/Contacts";
 import ContactDetail from "./pages/ContactDetail";
 import LeadsPage from "./pages/Leads";
 import AccountsPage from "./pages/Accounts";
+import AccountDetail from "./pages/AccountDetail";
 import DealsPage from "./pages/Deals";
 import CallsPage from "./pages/Calls";
 import TasksPage from "./pages/Tasks";
 import NotesPage from "./pages/Notes";
+import ReportsPage from "./pages/Reports";
 import AdminPage from "./pages/Admin";
 import AuditTrailPage from "./pages/AuditTrail";
 import SettingsPage from "./pages/Settings";
@@ -58,10 +60,12 @@ const App = () => (
             <Route path="/contacts/:id" element={<ProtectedRoute><ContactDetail /></ProtectedRoute>} />
             <Route path="/leads" element={<ProtectedRoute><LeadsPage /></ProtectedRoute>} />
             <Route path="/accounts" element={<ProtectedRoute><AccountsPage /></ProtectedRoute>} />
+            <Route path="/accounts/:id" element={<ProtectedRoute><AccountDetail /></ProtectedRoute>} />
             <Route path="/deals" element={<ProtectedRoute><DealsPage /></ProtectedRoute>} />
             <Route path="/calls" element={<ProtectedRoute><CallsPage /></ProtectedRoute>} />
             <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
             <Route path="/notes" element={<ProtectedRoute><NotesPage /></ProtectedRoute>} />
+            <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
             <Route path="/audit-trail" element={<ProtectedRoute><AuditTrailPage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
