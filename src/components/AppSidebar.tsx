@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Users, UserPlus, Building2, Handshake, Phone,
   ChevronLeft, ChevronRight, Zap, Shield, LogOut, Crown,
-  ClipboardList, FileText, Menu, X,
+  ClipboardList, FileText, Menu, X, Settings, History,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "@/components/NavLink";
@@ -82,11 +82,22 @@ export function AppSidebar() {
               <Shield className={cn("w-5 h-5 flex-shrink-0", location.pathname === "/admin" && "text-sidebar-primary")} />
               {!collapsed && <span>Admin Panel</span>}
             </NavLink>
+            <NavLink to="/audit-trail" onClick={() => setMobileOpen(false)}
+              className={cn("flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent", collapsed && "justify-center px-0")}
+              activeClassName="bg-sidebar-accent text-sidebar-accent-foreground">
+              <History className={cn("w-5 h-5 flex-shrink-0", location.pathname === "/audit-trail" && "text-sidebar-primary")} />
+              {!collapsed && <span>Audit Trail</span>}
+            </NavLink>
           </>
         )}
       </nav>
 
       <div className="p-3 border-t border-sidebar-border space-y-1">
+        <NavLink to="/settings" onClick={() => setMobileOpen(false)}
+          className={cn("w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-colors text-sm", collapsed && "justify-center")}
+          activeClassName="bg-sidebar-accent text-sidebar-accent-foreground">
+          <Settings className="w-4 h-4" />{!collapsed && <span>Settings</span>}
+        </NavLink>
         <button onClick={() => signOut()}
           className={cn("w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sidebar-foreground hover:text-destructive hover:bg-destructive/10 transition-colors text-sm", collapsed && "justify-center")}>
           <LogOut className="w-4 h-4" />{!collapsed && <span>Sign Out</span>}
