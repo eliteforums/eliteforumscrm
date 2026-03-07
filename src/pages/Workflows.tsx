@@ -80,8 +80,8 @@ export default function WorkflowsPage() {
   return (
     <AppLayout title="Workflow Automation" actions={
       <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}>
-        <DialogTrigger asChild><Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> New Rule</Button></DialogTrigger>
-        <DialogContent>
+        <DialogTrigger asChild><Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> <span className="hidden sm:inline">New Rule</span><span className="sm:hidden">New</span></Button></DialogTrigger>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader><DialogTitle>{editing ? "Edit Rule" : "New Workflow Rule"}</DialogTitle></DialogHeader>
           <form onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
             <div><Label>Rule Name *</Label><Input name="name" required defaultValue={editing?.name} placeholder="e.g., Auto-score new leads" /></div>

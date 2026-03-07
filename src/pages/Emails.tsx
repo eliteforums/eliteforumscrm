@@ -103,21 +103,21 @@ export default function EmailsPage() {
 
   return (
     <AppLayout title="Emails" actions={
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 whitespace-nowrap">
         {!emailConfig?.is_active && (
           <Link to="/settings">
             <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-              <Settings className="w-3.5 h-3.5" /> Configure Email
+              <Settings className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Configure Email</span><span className="sm:hidden">Config</span>
             </Button>
           </Link>
         )}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-2">
-              <Plus className="w-4 h-4" /> {emailConfig?.is_active ? "Send Email" : "Log Email"}
+              <Plus className="w-4 h-4" /> <span className="hidden sm:inline">{emailConfig?.is_active ? "Send Email" : "Log Email"}</span><span className="sm:hidden">{emailConfig?.is_active ? "Send" : "Log"}</span>
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{emailConfig?.is_active ? "Send Email" : "Log Email"}</DialogTitle>
             </DialogHeader>

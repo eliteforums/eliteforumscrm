@@ -201,16 +201,16 @@ export default function LeadsPage() {
     <AppLayout
       title="Leads"
       actions={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 whitespace-nowrap">
           <CsvImportExport module="leads" fields={LEAD_FIELDS} data={leads ?? []} onImport={handleCsvImport} />
           <Button variant="outline" size="sm" className="gap-1.5" onClick={() => scoreMutation.mutate()} disabled={scoreMutation.isPending}>
-            <Zap className="w-3.5 h-3.5" /> Score
+            <Zap className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Score</span><span className="sm:hidden">AI</span>
           </Button>
           <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditingLead(null); }}>
             <DialogTrigger asChild>
-              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Lead</Button>
+              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Lead</span><span className="sm:hidden">Add</span></Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader><DialogTitle>{editingLead ? "Edit Lead" : "New Lead"}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">

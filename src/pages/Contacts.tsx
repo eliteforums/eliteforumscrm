@@ -104,13 +104,13 @@ export default function ContactsPage() {
     <AppLayout
       title="Contacts"
       actions={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 whitespace-nowrap">
           <CsvImportExport module="contacts" fields={CONTACT_FIELDS} data={contacts ?? []} onImport={handleCsvImport} />
           <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditingContact(null); }}>
             <DialogTrigger asChild>
-              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Contact</Button>
+              <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Contact</span><span className="sm:hidden">Add</span></Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader><DialogTitle>{editingContact ? "Edit Contact" : "New Contact"}</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); createMutation.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
