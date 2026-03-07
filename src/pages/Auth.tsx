@@ -43,9 +43,7 @@ export default function AuthPage() {
         </div>
 
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl crm-gradient-primary flex items-center justify-center mx-auto mb-4">
-            <Zap className="w-7 h-7 text-primary-foreground" />
-          </div>
+          <img src="/logo.png" alt="Elite CRM" className="w-14 h-14 rounded-2xl object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-display font-bold text-foreground">Elite CRM</h1>
           <p className="text-muted-foreground mt-1">
             {isSignUp ? "Create your account" : "Sign in to your account"}
