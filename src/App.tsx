@@ -60,7 +60,7 @@ function LandingRoute() {
 }
 
 const App = () => (
-  <ThemeProvider defaultTheme="system" storageKey="elite-crm-theme">
+  <ThemeProvider defaultTheme="light" storageKey="elite-crm-theme">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
