@@ -297,6 +297,76 @@ export type Database = {
           },
         ]
       }
+      emails: {
+        Row: {
+          body: string | null
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          direction: string
+          from_address: string | null
+          id: string
+          lead_id: string | null
+          sent_at: string
+          status: string
+          subject: string
+          to_address: string | null
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          direction?: string
+          from_address?: string | null
+          id?: string
+          lead_id?: string | null
+          sent_at?: string
+          status?: string
+          subject: string
+          to_address?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          direction?: string
+          from_address?: string | null
+          id?: string
+          lead_id?: string | null
+          sent_at?: string
+          status?: string
+          subject?: string
+          to_address?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "emails_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emails_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "emails_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           annual_revenue: number | null
@@ -374,6 +444,79 @@ export type Database = {
             columns: ["converted_contact_id"]
             isOneToOne: false
             referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meetings: {
+        Row: {
+          account_id: string | null
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          description: string | null
+          end_time: string | null
+          id: string
+          location: string | null
+          meeting_type: string
+          start_time: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string | null
+          end_time?: string | null
+          id?: string
+          location?: string | null
+          meeting_type?: string
+          start_time?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string | null
+          end_time?: string | null
+          id?: string
+          location?: string | null
+          meeting_type?: string
+          start_time?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meetings_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meetings_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meetings_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
             referencedColumns: ["id"]
           },
         ]
@@ -554,6 +697,45 @@ export type Database = {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      workflow_rules: {
+        Row: {
+          actions: Json | null
+          conditions: Json | null
+          created_at: string
+          id: string
+          is_active: boolean
+          module: string
+          name: string
+          trigger_event: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actions?: Json | null
+          conditions?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          module: string
+          name: string
+          trigger_event?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actions?: Json | null
+          conditions?: Json | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          module?: string
+          name?: string
+          trigger_event?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
