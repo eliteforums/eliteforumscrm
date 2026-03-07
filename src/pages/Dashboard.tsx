@@ -5,6 +5,8 @@ import { KpiCards } from "@/components/dashboard/KpiCards";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { DealsPipeline } from "@/components/dashboard/DealsPipeline";
+import { TasksOverview } from "@/components/dashboard/TasksOverview";
+import { PipelineMetrics } from "@/components/dashboard/PipelineMetrics";
 
 export default function Dashboard() {
   const { data: contacts } = useQuery({
@@ -18,7 +20,7 @@ export default function Dashboard() {
   const { data: leads } = useQuery({
     queryKey: ["leads-count"],
     queryFn: async () => {
-      const { count } = await supabase.from("leads").select("*", { count: "exact", head: true });
+      const { count } = await supabase.from("leads").select("*", { count: "exact", head: true }).eq("converted", false);
       return count ?? 0;
     },
   });
@@ -41,6 +43,14 @@ export default function Dashboard() {
     },
   });
 
+  const { data: tasks } = useQuery({
+    queryKey: ["tasks-count"],
+    queryFn: async () => {
+      const { count } = await supabase.from("tasks").select("*", { count: "exact", head: true }).neq("status", "Completed");
+      return count ?? 0;
+    },
+  });
+
   return (
     <AppLayout title="Dashboard">
       <div className="space-y-6">
@@ -50,6 +60,7 @@ export default function Dashboard() {
           dealsTotal={deals?.total ?? 0}
           dealsCount={deals?.count ?? 0}
           callsCount={calls ?? 0}
+          tasksCount={tasks ?? 0}
         />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
@@ -59,7 +70,17 @@ export default function Dashboard() {
             <DealsPipeline />
           </div>
         </div>
-        <RecentActivity />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div>
+            <PipelineMetrics />
+          </div>
+          <div>
+            <TasksOverview />
+          </div>
+          <div>
+            <RecentActivity />
+          </div>
+        </div>
       </div>
     </AppLayout>
   );
