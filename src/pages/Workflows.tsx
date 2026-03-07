@@ -121,19 +121,19 @@ export default function WorkflowsPage() {
         <div className="space-y-3">
           {rules?.map((rule) => (
             <div key={rule.id} className="bg-card rounded-xl p-5 crm-shadow-card hover:crm-shadow-card-hover transition-shadow">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex items-start gap-3 min-w-0">
                   <div className={`p-2 rounded-lg ${rule.is_active ? "bg-success/10" : "bg-muted"}`}>
                     <Zap className={`w-5 h-5 ${rule.is_active ? "text-success" : "text-muted-foreground"}`} />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-medium text-foreground">{rule.name}</h4>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="font-medium text-foreground break-words">{rule.name}</h4>
                       <Badge variant="secondary" className={rule.is_active ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"}>
                         {rule.is_active ? "Active" : "Inactive"}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-sm text-muted-foreground mt-1 break-words">
                       On <span className="font-medium">{rule.trigger_event}</span> in <span className="font-medium capitalize">{rule.module}</span>
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -141,7 +141,7 @@ export default function WorkflowsPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 self-end sm:self-auto shrink-0">
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => toggleMutation.mutate({ id: rule.id, isActive: rule.is_active })} title={rule.is_active ? "Deactivate" : "Activate"}>
                     {rule.is_active ? <PowerOff className="w-4 h-4 text-warning" /> : <Power className="w-4 h-4 text-success" />}
                   </Button>

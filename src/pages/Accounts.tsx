@@ -169,13 +169,15 @@ export default function AccountsPage() {
         </div>
 
         {showFilters && (
-          <div className="flex flex-wrap gap-2 p-3 bg-card rounded-lg crm-shadow-card">
-            <span className="text-xs text-muted-foreground">Industry:</span>
-            {["all", ...INDUSTRIES].map((s) => (
-              <Button key={s} size="sm" variant={industryFilter === s ? "default" : "outline"} onClick={() => setIndustryFilter(s)} className="text-xs h-7">
-                {s === "all" ? "All" : s}
-              </Button>
-            ))}
+          <div className="overflow-x-auto pb-1">
+            <div className="flex w-max items-center gap-2 p-3 bg-card rounded-lg crm-shadow-card whitespace-nowrap">
+              <span className="text-xs text-muted-foreground">Industry:</span>
+              {["all", ...INDUSTRIES].map((s) => (
+                <Button key={s} size="sm" variant={industryFilter === s ? "default" : "outline"} onClick={() => setIndustryFilter(s)} className="text-xs h-7">
+                  {s === "all" ? "All" : s}
+                </Button>
+              ))}
+            </div>
           </div>
         )}
 
