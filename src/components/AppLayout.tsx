@@ -1,8 +1,9 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,8 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children, title, actions }: AppLayoutProps) {
+  const { theme, setTheme } = useTheme();
+
   return (
     <div className="flex min-h-screen w-full bg-background">
       <AppSidebar />
@@ -24,8 +27,11 @@ export function AppLayout({ children, title, actions }: AppLayoutProps) {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input placeholder="Search..." className="pl-9 w-48 lg:w-64 h-9 bg-secondary border-none text-sm" />
             </div>
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="w-5 h-5 text-muted-foreground" />
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+              {theme === "dark" ? <Sun className="w-4 h-4 text-muted-foreground" /> : <Moon className="w-4 h-4 text-muted-foreground" />}
+            </Button>
+            <Button variant="ghost" size="icon" className="relative h-9 w-9">
+              <Bell className="w-4 h-4 text-muted-foreground" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
             </Button>
             {actions}
