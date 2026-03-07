@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import {
   UserPlus, Building2, Handshake, FileText, BarChart3,
-  Shield, History, Settings, LogOut,
+  Shield, History, Settings, LogOut, Bot, Calendar, Mail, Workflow,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
