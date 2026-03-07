@@ -14,7 +14,337 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      accounts: {
+        Row: {
+          annual_revenue: number | null
+          billing_address: string | null
+          created_at: string
+          description: string | null
+          employees: number | null
+          id: string
+          industry: string | null
+          name: string
+          parent_account_id: string | null
+          phone: string | null
+          updated_at: string
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          annual_revenue?: number | null
+          billing_address?: string | null
+          created_at?: string
+          description?: string | null
+          employees?: number | null
+          id?: string
+          industry?: string | null
+          name: string
+          parent_account_id?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          annual_revenue?: number | null
+          billing_address?: string | null
+          created_at?: string
+          description?: string | null
+          employees?: number | null
+          id?: string
+          industry?: string | null
+          name?: string
+          parent_account_id?: string | null
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_parent_account_id_fkey"
+            columns: ["parent_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calls: {
+        Row: {
+          call_duration: number | null
+          call_purpose: string | null
+          call_result: string | null
+          call_start_time: string
+          call_type: string
+          contact_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          lead_id: string | null
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          call_duration?: number | null
+          call_purpose?: string | null
+          call_result?: string | null
+          call_start_time?: string
+          call_type?: string
+          contact_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lead_id?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          call_duration?: number | null
+          call_purpose?: string | null
+          call_result?: string | null
+          call_start_time?: string
+          call_type?: string
+          contact_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lead_id?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calls_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calls_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contacts: {
+        Row: {
+          account_id: string | null
+          avatar_url: string | null
+          created_at: string
+          department: string | null
+          description: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string
+          lead_source: string | null
+          mailing_address: string | null
+          mobile: string | null
+          phone: string | null
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          department?: string | null
+          description?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name: string
+          lead_source?: string | null
+          mailing_address?: string | null
+          mobile?: string | null
+          phone?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          department?: string | null
+          description?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string
+          lead_source?: string | null
+          mailing_address?: string | null
+          mobile?: string | null
+          phone?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deals: {
+        Row: {
+          account_id: string | null
+          amount: number | null
+          close_date: string | null
+          contact_id: string | null
+          created_at: string
+          description: string | null
+          id: string
+          lead_source: string | null
+          name: string
+          probability: number | null
+          stage: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount?: number | null
+          close_date?: string | null
+          contact_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lead_source?: string | null
+          name: string
+          probability?: number | null
+          stage?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number | null
+          close_date?: string | null
+          contact_id?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lead_source?: string | null
+          name?: string
+          probability?: number | null
+          stage?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deals_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          annual_revenue: number | null
+          company: string
+          converted: boolean | null
+          converted_account_id: string | null
+          converted_contact_id: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          industry: string | null
+          last_name: string
+          lead_source: string | null
+          lead_status: string
+          phone: string | null
+          score: number | null
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          annual_revenue?: number | null
+          company: string
+          converted?: boolean | null
+          converted_account_id?: string | null
+          converted_contact_id?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          industry?: string | null
+          last_name: string
+          lead_source?: string | null
+          lead_status?: string
+          phone?: string | null
+          score?: number | null
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          annual_revenue?: number | null
+          company?: string
+          converted?: boolean | null
+          converted_account_id?: string | null
+          converted_contact_id?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          industry?: string | null
+          last_name?: string
+          lead_source?: string | null
+          lead_status?: string
+          phone?: string | null
+          score?: number | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_converted_account_id_fkey"
+            columns: ["converted_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_converted_contact_id_fkey"
+            columns: ["converted_contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
