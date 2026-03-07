@@ -24,6 +24,7 @@ const navItems = [
   { title: "Notes", url: "/notes", icon: FileText },
   { title: "Workflows", url: "/workflows", icon: Workflow },
   { title: "Reports", url: "/reports", icon: BarChart3 },
+  { title: "AI Assistant", url: "/ai-assistant", icon: Bot },
 ];
 
 const roleLabels: Record<string, string> = {
