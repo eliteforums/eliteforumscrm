@@ -10,9 +10,7 @@ export function LandingNav() {
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl crm-gradient-primary flex items-center justify-center shadow-lg shadow-primary/25">
-            <Zap className="w-5 h-5 text-primary-foreground" />
-          </div>
+          <img src="/logo.png" alt="Elite CRM" className="w-9 h-9 rounded-xl object-contain" />
           <span className="font-display font-bold text-xl text-foreground tracking-tight">Elite CRM</span>
         </div>
 

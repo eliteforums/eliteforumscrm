@@ -63,9 +63,7 @@ export function AppSidebar() {
     <>
       <div className="flex items-center justify-between px-5 h-16 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg crm-gradient-primary flex items-center justify-center flex-shrink-0">
-            <Zap className="w-5 h-5 text-primary-foreground" />
-          </div>
+          <img src="/logo.png" alt="Elite CRM" className="w-9 h-9 rounded-lg object-contain flex-shrink-0" />
           {!collapsed && <span className="font-display font-bold text-lg text-sidebar-accent-foreground tracking-tight">Elite CRM</span>}
         </div>
         <button className="lg:hidden text-sidebar-foreground" onClick={() => setMobileOpen(false)}>
