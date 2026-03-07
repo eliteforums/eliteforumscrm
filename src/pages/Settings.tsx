@@ -7,9 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Mail, Shield, Smartphone, Bell, Palette, Save, Loader2, Crown } from "lucide-react";
+import { User, Mail, Shield, Smartphone, Bell, Save, Loader2, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { EmailConfigTab } from "@/components/settings/EmailConfigTab";
 
 const roleLabels: Record<string, string> = {
   super_admin: "Super Admin", admin: "Admin", manager: "Manager", employee: "Employee",
@@ -53,8 +54,9 @@ export default function SettingsPage() {
     <AppLayout title="Settings">
       <div className="max-w-3xl mx-auto">
         <Tabs defaultValue="profile">
-          <TabsList className="w-full justify-start mb-6">
+          <TabsList className="w-full justify-start mb-6 flex-wrap h-auto gap-1">
             <TabsTrigger value="profile" className="gap-1.5"><User className="w-4 h-4" /> Profile</TabsTrigger>
+            <TabsTrigger value="email" className="gap-1.5"><Mail className="w-4 h-4" /> Email</TabsTrigger>
             <TabsTrigger value="security" className="gap-1.5"><Shield className="w-4 h-4" /> Security</TabsTrigger>
             <TabsTrigger value="notifications" className="gap-1.5"><Bell className="w-4 h-4" /> Notifications</TabsTrigger>
             <TabsTrigger value="pwa" className="gap-1.5"><Smartphone className="w-4 h-4" /> PWA</TabsTrigger>
@@ -96,6 +98,10 @@ export default function SettingsPage() {
                 </Button>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="email">
+            <EmailConfigTab />
           </TabsContent>
 
           <TabsContent value="security">
