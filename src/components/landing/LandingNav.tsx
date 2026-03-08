@@ -41,7 +41,7 @@ export function LandingNav() {
         <div className="md:hidden border-t border-border bg-background px-6 py-4 space-y-3">
           <a href="#features" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Features</a>
           <a href="#solutions" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Solutions</a>
-          <a href="#pricing" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Pricing</a>
+          <a href="#pricing" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Book a Call</a>
           <a href="#testimonials" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Customers</a>
           <Link to="/auth"><Button className="w-full mt-2">Get Started</Button></Link>
         </div>
