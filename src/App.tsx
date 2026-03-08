@@ -99,7 +99,7 @@ const App = () => (
             <CookieConsent />
           </AuthProvider>
         </BrowserRouter>
-        <Analytics />
+        
       </TooltipProvider>
     </QueryClientProvider>
   </ThemeProvider>
