@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { Analytics } from "@vercel/analytics/react";
+
 import LandingPage from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import ContactsPage from "./pages/Contacts";
@@ -99,7 +99,7 @@ const App = () => (
             <CookieConsent />
           </AuthProvider>
         </BrowserRouter>
-        <Analytics />
+        
       </TooltipProvider>
     </QueryClientProvider>
   </ThemeProvider>
