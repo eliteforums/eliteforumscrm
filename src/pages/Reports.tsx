@@ -109,6 +109,17 @@ export default function ReportsPage() {
     };
   });
 
+  // Compute real month-over-month revenue trend
+  const currentMonthRevenue = monthlyRevenue.length >= 1 ? monthlyRevenue[monthlyRevenue.length - 1].revenue : 0;
+  const prevMonthRevenue = monthlyRevenue.length >= 2 ? monthlyRevenue[monthlyRevenue.length - 2].revenue : 0;
+  const revenueTrendPct = prevMonthRevenue > 0
+    ? ((currentMonthRevenue - prevMonthRevenue) / prevMonthRevenue) * 100
+    : currentMonthRevenue > 0 ? 100 : 0;
+  const revenueTrendUp = revenueTrendPct >= 0;
+  const revenueTrendLabel = revenueTrendPct !== 0
+    ? `${revenueTrendUp ? "+" : ""}${revenueTrendPct.toFixed(0)}%`
+    : null;
+
   // Lead source distribution
   const sourceMap: Record<string, number> = {};
   leads?.forEach((l) => {
@@ -147,7 +158,7 @@ export default function ReportsPage() {
         {/* Top KPI Row */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
-            { label: "Total Revenue", value: `$${(totalRevenue / 1000).toFixed(0)}k`, icon: DollarSign, color: "bg-success/10 text-success", trend: "+12%", up: true },
+            { label: "Total Revenue", value: `$${(totalRevenue / 1000).toFixed(0)}k`, icon: DollarSign, color: "bg-success/10 text-success", trend: revenueTrendLabel, up: revenueTrendUp },
             { label: "Pipeline Value", value: `$${(pipelineValue / 1000).toFixed(0)}k`, icon: TrendingUp, color: "bg-primary/10 text-primary" },
             { label: "Win Rate", value: `${winRate.toFixed(1)}%`, icon: Target, color: "bg-accent/10 text-accent" },
             { label: "Avg Deal Size", value: `$${avgDealSize.toFixed(0)}`, icon: BarChart3, color: "bg-warning/10 text-warning" },
