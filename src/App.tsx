@@ -65,7 +65,7 @@ function LandingRoute() {
 
 const App = () => (
   <ThemeProvider defaultTheme="light" storageKey="elite-crm-theme">
-    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}>
+    <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
