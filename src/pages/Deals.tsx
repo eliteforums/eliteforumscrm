@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, DollarSign, Calendar, Trash2, Edit, Search, Filter, Building2, Users } from "lucide-react";
+import { Plus, DollarSign, Calendar, Trash2, Edit, Search, Filter, Building2, Users, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { format } from "date-fns";
