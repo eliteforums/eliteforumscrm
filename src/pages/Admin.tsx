@@ -62,7 +62,16 @@ export default function AdminPage() {
       const { data, error } = await supabase.functions.invoke("create-user", {
         body: { email: newEmail, password: newPassword, full_name: newFullName, role: newRole },
       });
-      if (error) throw error;
+
+      if (error) {
+        const functionContext = (error as { context?: { json?: () => Promise<{ error?: string }> } }).context;
+        if (functionContext?.json) {
+          const payload = await functionContext.json().catch(() => null);
+          throw new Error(payload?.error || error.message);
+        }
+        throw error;
+      }
+
       if (data?.error) throw new Error(data.error);
       return data;
     },
