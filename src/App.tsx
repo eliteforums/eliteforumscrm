@@ -26,6 +26,8 @@ import EmailsPage from "./pages/Emails";
 import WorkflowsPage from "./pages/Workflows";
 import AiAssistantPage from "./pages/AiAssistant";
 import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const queryClient = new QueryClient({
   defaultOptions: {
