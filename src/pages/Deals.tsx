@@ -103,6 +103,29 @@ export default function DealsPage() {
     },
   });
 
+  // AI Deal Insights
+  const [aiInsight, setAiInsight] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const getAiInsights = async () => {
+    if (!deals?.length) { toast.error("No deals to analyze"); return; }
+    setAiLoading(true);
+    try {
+      const summary = deals.map(d => `${d.name}: $${d.amount || 0}, Stage: ${d.stage}, Prob: ${d.probability}%`).join("\n");
+      const { data, error } = await supabase.functions.invoke("ai-chat", {
+        body: { messages: [{ role: "user", content: `Analyze this deal pipeline and give 3 actionable insights in bullet points. Be concise:\n${summary}` }] },
+      });
+      if (error) throw error;
+      // For non-streaming response, parse the text
+      const text = typeof data === "string" ? data : data?.choices?.[0]?.message?.content || "Unable to generate insights.";
+      setAiInsight(text);
+    } catch (e: any) {
+      toast.error("AI insights unavailable");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   // Group by stage for kanban view
   const displayStages = stageFilter !== "all" ? [stageFilter] : STAGES;
   const grouped = displayStages.map((stage) => ({
