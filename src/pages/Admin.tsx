@@ -272,6 +272,12 @@ export default function AdminPage() {
             </TableBody>
           </Table>
         </div>
+
+        {/* Employee Activity Tracking */}
+        <div className="mt-6">
+          <h3 className="text-lg font-display font-semibold text-foreground mb-4">Employee Activity Tracking</h3>
+          <EmployeeActivityPanel users={users ?? []} />
+        </div>
       </div>
     </AppLayout>
   );
