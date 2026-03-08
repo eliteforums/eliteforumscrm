@@ -1,11 +1,12 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/components/ThemeProvider";
-
 import LandingPage from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import ContactsPage from "./pages/Contacts";
@@ -35,11 +36,17 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 30, // 30 minutes cache
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours (for persistence)
       retry: 1,
       refetchOnWindowFocus: false,
     },
   },
+});
+
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+  key: "elite-crm-cache",
+  throttleTime: 1000,
 });
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -65,7 +72,7 @@ function LandingRoute() {
 
 const App = () => (
   <ThemeProvider defaultTheme="light" storageKey="elite-crm-theme">
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -99,9 +106,8 @@ const App = () => (
             <CookieConsent />
           </AuthProvider>
         </BrowserRouter>
-        
       </TooltipProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   </ThemeProvider>
 );
 
