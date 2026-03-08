@@ -19,11 +19,11 @@ export function CtaSection() {
             <p className="text-lg text-primary-foreground/80 mb-8 max-w-xl mx-auto">
               Join thousands of sales teams already using Elite CRM to close more deals, faster. Start free today.
             </p>
-            <Link to="/auth">
+            <a href="https://calendar.app.google/FmdoMp2gFvXTKqD16" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="secondary" className="gap-2 text-base px-10 h-13 font-bold shadow-xl">
-                Start Your Free Trial <ArrowRight className="w-4 h-4" />
+                Book a Call <ArrowRight className="w-4 h-4" />
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
