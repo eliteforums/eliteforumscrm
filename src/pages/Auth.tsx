@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, Loader2, ArrowLeft, Shield, BarChart3, Users, Zap } from "lucide-react";
+import { Mail, Lock, Loader2, ArrowLeft, Shield, BarChart3, Users, Zap, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AuthPage() {
@@ -12,6 +12,7 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,15 +135,28 @@ export default function AuthPage() {
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 h-11 bg-background/50 border-border/80 focus:border-primary/50 transition-colors"
+                    className="pl-10 pr-10 h-11 bg-background/50 border-border/80 focus:border-primary/50 transition-colors"
                     required
                     minLength={6}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
+              </div>
+
+              <div className="flex justify-end">
+                <Link to="/forgot-password" className="text-xs text-primary hover:underline font-medium">
+                  Forgot password?
+                </Link>
               </div>
 
               <Button
