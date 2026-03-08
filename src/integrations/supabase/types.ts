@@ -1174,6 +1174,51 @@ export type Database = {
         }
         Relationships: []
       }
+      visitor_analytics: {
+        Row: {
+          city: string | null
+          country: string | null
+          id: string
+          language: string | null
+          page_url: string | null
+          platform: string | null
+          referrer: string | null
+          screen_height: number | null
+          screen_width: number | null
+          user_agent: string | null
+          visited_at: string
+          visitor_id: string
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          id?: string
+          language?: string | null
+          page_url?: string | null
+          platform?: string | null
+          referrer?: string | null
+          screen_height?: number | null
+          screen_width?: number | null
+          user_agent?: string | null
+          visited_at?: string
+          visitor_id: string
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          id?: string
+          language?: string | null
+          page_url?: string | null
+          platform?: string | null
+          referrer?: string | null
+          screen_height?: number | null
+          screen_width?: number | null
+          user_agent?: string | null
+          visited_at?: string
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       workflow_rules: {
         Row: {
           actions: Json | null
