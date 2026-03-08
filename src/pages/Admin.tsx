@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { EmployeeActivityPanel } from "@/components/admin/EmployeeActivityPanel";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/AppLayout";
@@ -36,9 +37,23 @@ export default function AdminPage() {
     queryFn: async () => {
       const { data: roles, error } = await supabase
         .from("user_roles")
-        .select("*, profiles:user_id(full_name, avatar_url)");
+        .select("*");
       if (error) throw error;
-      return roles;
+
+      // Fetch profiles separately
+      const userIds = roles.map((r) => r.user_id);
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, avatar_url")
+        .in("user_id", userIds);
+
+      const profileMap: Record<string, any> = {};
+      profiles?.forEach((p) => { profileMap[p.user_id] = p; });
+
+      return roles.map((r) => ({
+        ...r,
+        profiles: profileMap[r.user_id] || null,
+      }));
     },
   });
 
@@ -270,6 +285,12 @@ export default function AdminPage() {
               )}
             </TableBody>
           </Table>
+        </div>
+
+        {/* Employee Activity Tracking */}
+        <div className="mt-6">
+          <h3 className="text-lg font-display font-semibold text-foreground mb-4">Employee Activity Tracking</h3>
+          <EmployeeActivityPanel users={users ?? []} />
         </div>
       </div>
     </AppLayout>
