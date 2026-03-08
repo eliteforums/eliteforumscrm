@@ -78,8 +78,8 @@ export function CookieConsent() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 animate-fade-in">
-      <div className="max-w-2xl mx-auto bg-card border border-border rounded-2xl shadow-2xl shadow-black/20 p-5">
+    <div className="fixed bottom-4 right-4 z-[100] animate-fade-in max-w-sm">
+      <div className="bg-card border border-border rounded-2xl shadow-2xl shadow-black/20 p-4">
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
             <Cookie className="w-5 h-5 text-primary" />
