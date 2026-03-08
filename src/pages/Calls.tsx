@@ -180,6 +180,11 @@ export default function CallsPage() {
             </div>
             {isLoading ? (
               <div className="text-center py-8 text-muted-foreground">Loading...</div>
+            ) : error ? (
+              <div className="bg-card rounded-xl p-6 text-center crm-shadow-card space-y-3">
+                <p className="text-sm text-muted-foreground">Couldn’t load calls right now.</p>
+                <Button size="sm" variant="outline" onClick={() => refetch()}>Try again</Button>
+              </div>
             ) : (
               <CallTimeline
                 calls={calls ?? []}
