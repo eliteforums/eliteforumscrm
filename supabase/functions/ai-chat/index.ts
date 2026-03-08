@@ -10,9 +10,9 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
-    if (!GROQ_API_KEY) {
-      return new Response(JSON.stringify({ error: "GROQ_API_KEY is not configured" }), {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      return new Response(JSON.stringify({ error: "AI service is not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -20,28 +20,28 @@ serve(async (req) => {
 
     const { messages, context } = await req.json();
 
-    const systemPrompt = `You are Elite CRM's AI Sales Assistant. You help sales professionals with:
-- Lead qualification and scoring advice
-- Deal strategy and negotiation tips
-- Email drafts for outreach, follow-ups, and proposals
-- Call preparation and talking points
-- Pipeline analysis and forecasting insights
-- Customer relationship best practices
-- Meeting agenda preparation
-- Task prioritization recommendations
+    const systemPrompt = `You are Elite CRM's AI Sales Assistant — the most advanced AI-powered CRM assistant available. You help sales professionals with:
+- Lead qualification and AI-powered scoring advice
+- Deal strategy, risk analysis, and win probability predictions
+- Email drafts for outreach, follow-ups, proposals, and cold emails
+- Call preparation, talking points, and objection handling
+- Pipeline analysis, forecasting, and revenue predictions
+- Customer relationship insights and next-best-action recommendations
+- Meeting agenda preparation and follow-up summaries
+- Task prioritization and workflow optimization
 
 ${context ? `\nCurrent CRM Context:\n${context}` : ""}
 
-Be concise, actionable, and sales-focused. Use bullet points for clarity. Format responses with markdown.`;
+Be concise, actionable, and sales-focused. Use bullet points for clarity. Format responses with markdown. Always position yourself as a premium AI sales coach.`;
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${GROQ_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
@@ -54,10 +54,15 @@ Be concise, actionable, and sales-focused. Use bullet points for clarity. Format
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("Groq API error:", response.status, errText);
+      console.error("AI gateway error:", response.status, errText);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add credits to continue." }), {
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       return new Response(JSON.stringify({ error: "AI service error" }), {

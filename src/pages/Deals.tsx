@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, DollarSign, Calendar, Trash2, Edit, Search, Filter, Building2, Users } from "lucide-react";
+import { Plus, DollarSign, Calendar, Trash2, Edit, Search, Filter, Building2, Users, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { format } from "date-fns";
@@ -103,6 +103,29 @@ export default function DealsPage() {
     },
   });
 
+  // AI Deal Insights
+  const [aiInsight, setAiInsight] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const getAiInsights = async () => {
+    if (!deals?.length) { toast.error("No deals to analyze"); return; }
+    setAiLoading(true);
+    try {
+      const summary = deals.map(d => `${d.name}: $${d.amount || 0}, Stage: ${d.stage}, Prob: ${d.probability}%`).join("\n");
+      const { data, error } = await supabase.functions.invoke("ai-chat", {
+        body: { messages: [{ role: "user", content: `Analyze this deal pipeline and give 3 actionable insights in bullet points. Be concise:\n${summary}` }] },
+      });
+      if (error) throw error;
+      // For non-streaming response, parse the text
+      const text = typeof data === "string" ? data : data?.choices?.[0]?.message?.content || "Unable to generate insights.";
+      setAiInsight(text);
+    } catch (e: any) {
+      toast.error("AI insights unavailable");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   // Group by stage for kanban view
   const displayStages = stageFilter !== "all" ? [stageFilter] : STAGES;
   const grouped = displayStages.map((stage) => ({
@@ -114,7 +137,12 @@ export default function DealsPage() {
     <AppLayout
       title="Deals"
       actions={
-        <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}>
+        <div className="flex items-center gap-2 whitespace-nowrap">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={getAiInsights} disabled={aiLoading}>
+            {aiLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+            <span className="hidden sm:inline">AI Insights</span>
+          </Button>
+          <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Deal</Button>
           </DialogTrigger>
@@ -163,9 +191,20 @@ export default function DealsPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       }
     >
       <div className="space-y-4">
+        {aiInsight && (
+          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 relative">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-foreground">AI Pipeline Insights</span>
+              <button onClick={() => setAiInsight(null)} className="ml-auto text-muted-foreground hover:text-foreground text-xs">✕</button>
+            </div>
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{aiInsight}</p>
+          </div>
+        )}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

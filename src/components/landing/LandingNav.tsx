@@ -17,7 +17,7 @@ export function LandingNav() {
         <div className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</a>
           <a href="#solutions" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Solutions</a>
-          <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
+          <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Book a Call</a>
           <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Customers</a>
         </div>
 
@@ -25,11 +25,11 @@ export function LandingNav() {
           <Link to="/auth">
             <Button variant="ghost" size="sm" className="font-medium">Sign In</Button>
           </Link>
-          <Link to="/auth">
+          <a href="#pricing">
             <Button size="sm" className="gap-1.5 font-medium shadow-lg shadow-primary/25">
-              Start Free Trial <ArrowRight className="w-3.5 h-3.5" />
+              Book a Demo <ArrowRight className="w-3.5 h-3.5" />
             </Button>
-          </Link>
+          </a>
         </div>
 
         <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
@@ -41,7 +41,7 @@ export function LandingNav() {
         <div className="md:hidden border-t border-border bg-background px-6 py-4 space-y-3">
           <a href="#features" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Features</a>
           <a href="#solutions" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Solutions</a>
-          <a href="#pricing" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Pricing</a>
+          <a href="#pricing" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Book a Call</a>
           <a href="#testimonials" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Customers</a>
           <Link to="/auth"><Button className="w-full mt-2">Get Started</Button></Link>
         </div>
