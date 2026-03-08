@@ -137,7 +137,12 @@ export default function DealsPage() {
     <AppLayout
       title="Deals"
       actions={
-        <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}>
+        <div className="flex items-center gap-2 whitespace-nowrap">
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={getAiInsights} disabled={aiLoading}>
+            {aiLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+            <span className="hidden sm:inline">AI Insights</span>
+          </Button>
+          <Dialog open={isOpen} onOpenChange={(o) => { setIsOpen(o); if (!o) setEditing(null); }}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-2"><Plus className="w-4 h-4" /> Add Deal</Button>
           </DialogTrigger>
