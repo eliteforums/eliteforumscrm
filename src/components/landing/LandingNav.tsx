@@ -8,10 +8,10 @@ export function LandingNav() {
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img src="/logo.png" alt="Elite CRM" className="w-9 h-9 rounded-xl object-contain" />
-          <span className="font-display font-bold text-xl text-foreground tracking-tight">Elite CRM</span>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
+        <div className="flex items-center gap-2 md:gap-3">
+          <img src="/logo.png" alt="Elite CRM" className="w-8 h-8 md:w-9 md:h-9 rounded-xl object-contain" />
+          <span className="font-display font-bold text-lg md:text-xl text-foreground tracking-tight">Elite CRM</span>
         </div>
 
         <div className="hidden md:flex items-center gap-8">
@@ -32,18 +32,25 @@ export function LandingNav() {
           </a>
         </div>
 
-        <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
-          {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex md:hidden items-center gap-2">
+          <Link to="/auth">
+            <Button variant="ghost" size="sm" className="font-medium text-xs h-8 px-2.5">Sign In</Button>
+          </Link>
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="p-1.5">
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-border bg-background px-6 py-4 space-y-3">
-          <a href="#features" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Features</a>
-          <a href="#solutions" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Solutions</a>
-          <a href="#pricing" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Book a Call</a>
-          <a href="#testimonials" className="block text-sm font-medium text-muted-foreground" onClick={() => setMobileOpen(false)}>Customers</a>
-          <Link to="/auth"><Button className="w-full mt-2">Get Started</Button></Link>
+        <div className="md:hidden border-t border-border bg-background px-4 py-3 space-y-2.5">
+          <a href="#features" className="block text-sm font-medium text-muted-foreground py-1" onClick={() => setMobileOpen(false)}>Features</a>
+          <a href="#solutions" className="block text-sm font-medium text-muted-foreground py-1" onClick={() => setMobileOpen(false)}>Solutions</a>
+          <a href="#pricing" className="block text-sm font-medium text-muted-foreground py-1" onClick={() => setMobileOpen(false)}>Book a Call</a>
+          <a href="#testimonials" className="block text-sm font-medium text-muted-foreground py-1" onClick={() => setMobileOpen(false)}>Customers</a>
+          <a href="#pricing" onClick={() => setMobileOpen(false)}>
+            <Button className="w-full mt-1 h-10" size="sm">Book a Demo</Button>
+          </a>
         </div>
       )}
     </nav>
