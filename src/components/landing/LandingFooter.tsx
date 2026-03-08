@@ -7,9 +7,7 @@ export function LandingFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-lg crm-gradient-primary flex items-center justify-center">
-                <Zap className="w-4 h-4 text-primary-foreground" />
-              </div>
+              <img src="/logo.png" alt="Elite CRM" className="w-9 h-9 rounded-xl object-contain" />
               <span className="font-display font-bold text-foreground">Elite CRM</span>
             </div>
             <p className="text-sm text-muted-foreground mb-2">Enterprise-grade CRM with PWA support. Manage contacts, track calls, and close deals from anywhere.</p>
