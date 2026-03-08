@@ -195,6 +195,16 @@ export default function DealsPage() {
       }
     >
       <div className="space-y-4">
+        {aiInsight && (
+          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 relative">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-foreground">AI Pipeline Insights</span>
+              <button onClick={() => setAiInsight(null)} className="ml-auto text-muted-foreground hover:text-foreground text-xs">✕</button>
+            </div>
+            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{aiInsight}</p>
+          </div>
+        )}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
