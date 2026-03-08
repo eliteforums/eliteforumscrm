@@ -44,28 +44,28 @@ const showcases = [
 
 export function FeatureShowcase() {
   return (
-    <section id="solutions" className="py-20">
-      <div className="max-w-7xl mx-auto px-6 space-y-24">
+    <section id="solutions" className="py-12 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-12 md:space-y-24">
         {showcases.map((item, i) => (
-          <div key={item.tag} className={`grid lg:grid-cols-2 gap-12 items-center ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}>
+          <div key={item.tag} className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-center ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}>
             <div className={i % 2 === 1 ? "lg:order-2" : ""}>
-              <span className="text-sm font-semibold text-primary uppercase tracking-wider">{item.tag}</span>
-              <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mt-2 mb-4">
+              <span className="text-xs md:text-sm font-semibold text-primary uppercase tracking-wider">{item.tag}</span>
+              <h3 className="text-xl md:text-3xl font-display font-bold text-foreground mt-2 mb-3 md:mb-4">
                 {item.title}
               </h3>
-              <p className="text-muted-foreground mb-6 leading-relaxed">{item.description}</p>
-              <ul className="space-y-3">
+              <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6 leading-relaxed">{item.description}</p>
+              <ul className="space-y-2.5 md:space-y-3">
                 {item.points.map((point) => (
-                  <li key={point} className="flex items-center gap-3 text-sm text-foreground">
-                    <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
+                  <li key={point} className="flex items-center gap-2.5 md:gap-3 text-xs md:text-sm text-foreground">
+                    <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-success flex-shrink-0" />
                     {point}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className={`bg-gradient-to-br ${item.gradient} rounded-2xl p-12 flex items-center justify-center ${i % 2 === 1 ? "lg:order-1" : ""} group/icon`}>
-              <div className="w-32 h-32 rounded-2xl bg-card crm-shadow-card-hover flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-xl group-hover/icon:shadow-primary/20 transition-all duration-300">
-                <item.icon className="w-16 h-16 text-primary/60 group-hover/icon:text-primary group-hover/icon:scale-110 transition-all duration-300" />
+            <div className={`bg-gradient-to-br ${item.gradient} rounded-xl md:rounded-2xl p-8 md:p-12 flex items-center justify-center ${i % 2 === 1 ? "lg:order-1" : ""} group/icon`}>
+              <div className="w-20 h-20 md:w-32 md:h-32 rounded-xl md:rounded-2xl bg-card crm-shadow-card-hover flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-xl group-hover/icon:shadow-primary/20 transition-all duration-300">
+                <item.icon className="w-10 h-10 md:w-16 md:h-16 text-primary/60 group-hover/icon:text-primary group-hover/icon:scale-110 transition-all duration-300" />
               </div>
             </div>
           </div>

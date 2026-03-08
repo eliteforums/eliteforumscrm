@@ -24,32 +24,32 @@ const features = [
 
 export function FeaturesGrid() {
   return (
-    <section id="features" className="py-20 bg-muted/20">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="text-sm font-semibold text-primary uppercase tracking-wider">AI-Powered Features</span>
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mt-2 mb-4">
+    <section id="features" className="py-12 md:py-20 bg-muted/20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="text-center mb-10 md:mb-16">
+          <span className="text-xs md:text-sm font-semibold text-primary uppercase tracking-wider">AI-Powered Features</span>
+          <h2 className="text-2xl md:text-4xl font-display font-bold text-foreground mt-2 mb-3 md:mb-4">
             The Most Powerful AI CRM Ever Built
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
             16+ integrated modules powered by artificial intelligence. From AI lead scoring to smart deal predictions — 
             Elite CRM is the best CRM software for modern sales teams.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
           {features.map((feature) => (
-            <div key={feature.title} className={`bg-card rounded-xl p-6 border hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group relative ${feature.ai ? 'border-primary/30 ring-1 ring-primary/10' : 'border-border/50 hover:border-primary/30'}`}>
+            <div key={feature.title} className={`bg-card rounded-xl p-4 md:p-6 border hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group relative ${feature.ai ? 'border-primary/30 ring-1 ring-primary/10' : 'border-border/50 hover:border-primary/30'}`}>
               {feature.ai && (
                 <div className="absolute -top-2.5 right-4 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
                   <Sparkles className="w-2.5 h-2.5" /> AI
                 </div>
               )}
-              <div className={`${feature.bg} w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                <feature.icon className={`w-6 h-6 ${feature.color}`} />
+              <div className={`${feature.bg} w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-transform`}>
+                <feature.icon className={`w-5 h-5 md:w-6 md:h-6 ${feature.color}`} />
               </div>
-              <h3 className="font-display font-semibold text-foreground mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+              <h3 className="font-display font-semibold text-foreground mb-1.5 md:mb-2 text-sm md:text-base">{feature.title}</h3>
+              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
             </div>
           ))}
         </div>
