@@ -63,9 +63,9 @@ export function FeatureShowcase() {
                 ))}
               </ul>
             </div>
-            <div className={`bg-gradient-to-br ${item.gradient} rounded-2xl p-12 flex items-center justify-center ${i % 2 === 1 ? "lg:order-1" : ""}`}>
-              <div className="w-32 h-32 rounded-2xl bg-card crm-shadow-card-hover flex items-center justify-center">
-                <item.icon className="w-16 h-16 text-primary/60" />
+            <div className={`bg-gradient-to-br ${item.gradient} rounded-2xl p-12 flex items-center justify-center ${i % 2 === 1 ? "lg:order-1" : ""} group/icon`}>
+              <div className="w-32 h-32 rounded-2xl bg-card crm-shadow-card-hover flex items-center justify-center group-hover/icon:scale-110 group-hover/icon:shadow-xl group-hover/icon:shadow-primary/20 transition-all duration-300">
+                <item.icon className="w-16 h-16 text-primary/60 group-hover/icon:text-primary group-hover/icon:scale-110 transition-all duration-300" />
               </div>
             </div>
           </div>
