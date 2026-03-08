@@ -28,14 +28,47 @@ export default function CallsPage() {
   const [callingContactId, setCallingContactId] = useState<string | null>(null);
   const [callingContactName, setCallingContactName] = useState("");
 
-  const { data: calls, isLoading } = useQuery({
+  const { data: calls, isLoading, error, refetch } = useQuery({
     queryKey: ["calls-list", search],
     queryFn: async () => {
-      let query = supabase.from("calls").select("*, contacts(first_name, last_name)").order("call_start_time", { ascending: false });
-      if (search) query = query.ilike("subject", `%${search}%`);
-      const { data, error } = await query;
-      if (error) throw error;
-      return data;
+      let joinedQuery = supabase
+        .from("calls")
+        .select("*, contacts(id, first_name, last_name)")
+        .order("call_start_time", { ascending: false });
+
+      if (search) joinedQuery = joinedQuery.ilike("subject", `%${search}%`);
+
+      const { data: joinedData, error: joinedError } = await joinedQuery;
+      if (!joinedError) return joinedData ?? [];
+
+      // Fallback path (mobile-safe): fetch calls + contacts separately and merge.
+      let callsQuery = supabase
+        .from("calls")
+        .select("*")
+        .order("call_start_time", { ascending: false });
+
+      if (search) callsQuery = callsQuery.ilike("subject", `%${search}%`);
+
+      const { data: callsOnly, error: callsError } = await callsQuery;
+      if (callsError) throw callsError;
+
+      const contactIds = Array.from(
+        new Set((callsOnly ?? []).map((c) => c.contact_id).filter(Boolean))
+      ) as string[];
+
+      if (contactIds.length === 0) return callsOnly ?? [];
+
+      const { data: contactsData } = await supabase
+        .from("contacts")
+        .select("id, first_name, last_name")
+        .in("id", contactIds);
+
+      const contactMap = new Map((contactsData ?? []).map((c) => [c.id, c]));
+
+      return (callsOnly ?? []).map((call) => ({
+        ...call,
+        contacts: call.contact_id ? contactMap.get(call.contact_id) ?? null : null,
+      }));
     },
   });
 
