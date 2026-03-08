@@ -13,7 +13,8 @@ export function LandingFooter() {
               </div>
               <span className="font-display font-bold text-foreground">Elite CRM</span>
             </div>
-            <p className="text-sm text-muted-foreground">Enterprise-grade CRM with PWA support. Manage contacts, track calls, and close deals from anywhere.</p>
+            <p className="text-sm text-muted-foreground mb-2">Enterprise-grade CRM with PWA support. Manage contacts, track calls, and close deals from anywhere.</p>
+            <p className="text-xs text-muted-foreground">A product by <a href="https://eliteforums.in" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Elite Forums</a></p>
           </div>
           <div>
             <h4 className="font-semibold text-sm text-foreground mb-3">Product</h4>

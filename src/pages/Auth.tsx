@@ -171,6 +171,13 @@ export default function AuthPage() {
           <p className="text-center text-xs text-muted-foreground mt-6">
             Protected by enterprise-grade encryption
           </p>
+          <p className="text-center text-xs text-muted-foreground mt-2">
+            A product by <a href="https://eliteforums.in" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Elite Forums</a>
+          </p>
+          <div className="flex justify-center gap-4 mt-2">
+            <Link to="/privacy-policy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link to="/terms-of-service" className="text-xs text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link>
+          </div>
         </div>
       </div>
     </div>
