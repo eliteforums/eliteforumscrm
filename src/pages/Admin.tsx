@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { EmployeeActivityPanel } from "@/components/admin/EmployeeActivityPanel";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout } from "@/components/AppLayout";
