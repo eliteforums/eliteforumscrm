@@ -19,7 +19,7 @@ export function CtaSection() {
             <p className="text-lg text-primary-foreground/80 mb-8 max-w-xl mx-auto">
               Join teams already using Elite CRM's AI to score leads, predict outcomes, and automate workflows. Book a free demo today.
             </p>
-            <a href="https://calendar.app.google/FmdoMp2gFvXTKqD16" target="_blank" rel="noopener noreferrer">
+            <a href="#pricing">
               <Button size="lg" variant="secondary" className="gap-2 text-base px-10 h-13 font-bold shadow-xl">
                 Book a Demo <ArrowRight className="w-4 h-4" />
               </Button>
