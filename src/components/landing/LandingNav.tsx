@@ -17,7 +17,7 @@ export function LandingNav() {
         <div className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</a>
           <a href="#solutions" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Solutions</a>
-          <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
+          <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Book a Call</a>
           <a href="#testimonials" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Customers</a>
         </div>
 
