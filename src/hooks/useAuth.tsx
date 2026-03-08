@@ -39,14 +39,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const logLogin = async (userId: string) => {
+    try {
+      await supabase.from("user_login_logs").insert({
+        user_id: userId,
+        user_agent: navigator.userAgent,
+      });
+    } catch {
+      // silently fail
+    }
+  };
+
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
       if (session?.user) {
-        // Use setTimeout to avoid Supabase client deadlock
         setTimeout(() => fetchRole(session.user.id), 0);
+        if (event === "SIGNED_IN") {
+          setTimeout(() => logLogin(session.user.id), 0);
+        }
       } else {
         setRole(null);
         setRoleLoading(false);
