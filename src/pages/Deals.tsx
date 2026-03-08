@@ -191,6 +191,7 @@ export default function DealsPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       }
     >
       <div className="space-y-4">
