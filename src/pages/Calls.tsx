@@ -223,7 +223,7 @@ export default function CallsPage() {
       {/* Mobile FAB for quick call */}
       <button
         onClick={() => setActiveTab("dialer")}
-        className="lg:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center active:scale-95 transition-transform"
+        className="lg:hidden fixed bottom-20 right-4 z-40 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center active:scale-95 transition-transform"
         aria-label="Quick Dial"
       >
         <Phone className="w-6 h-6" />
