@@ -25,11 +25,11 @@ export function LandingNav() {
           <Link to="/auth">
             <Button variant="ghost" size="sm" className="font-medium">Sign In</Button>
           </Link>
-          <Link to="/auth">
+          <a href="#pricing">
             <Button size="sm" className="gap-1.5 font-medium shadow-lg shadow-primary/25">
-              Start Free Trial <ArrowRight className="w-3.5 h-3.5" />
+              Book a Demo <ArrowRight className="w-3.5 h-3.5" />
             </Button>
-          </Link>
+          </a>
         </div>
 
         <button className="md:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
