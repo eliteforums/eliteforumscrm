@@ -21,9 +21,9 @@ export function StatsCounter() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                <stat.icon className="w-6 h-6 text-primary" />
+            <div key={stat.label} className="text-center group cursor-default">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 group-hover:bg-primary/20 group-hover:shadow-lg group-hover:shadow-primary/20 transition-all duration-300">
+                <stat.icon className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
               </div>
               <div className="text-3xl md:text-4xl font-display font-extrabold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 {stat.value}
