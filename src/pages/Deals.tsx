@@ -112,13 +112,38 @@ export default function DealsPage() {
     setAiLoading(true);
     try {
       const summary = deals.map(d => `${d.name}: $${d.amount || 0}, Stage: ${d.stage}, Prob: ${d.probability}%`).join("\n");
-      const { data, error } = await supabase.functions.invoke("ai-chat", {
-        body: { messages: [{ role: "user", content: `Analyze this deal pipeline and give 3 actionable insights in bullet points. Be concise:\n${summary}` }] },
+      const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: [{ role: "user", content: `Analyze this deal pipeline and give 3 actionable insights in bullet points. Be concise:\n${summary}` }] }),
       });
-      if (error) throw error;
-      // For non-streaming response, parse the text
-      const text = typeof data === "string" ? data : data?.choices?.[0]?.message?.content || "Unable to generate insights.";
-      setAiInsight(text);
+      if (!resp.ok) throw new Error("AI unavailable");
+      
+      // Read streaming response
+      const reader = resp.body?.getReader();
+      if (!reader) throw new Error("No response");
+      const decoder = new TextDecoder();
+      let result = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split("\n")) {
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) result += content;
+          } catch {}
+        }
+      }
+      setAiInsight(result || "Unable to generate insights.");
     } catch (e: any) {
       toast.error("AI insights unavailable");
     } finally {

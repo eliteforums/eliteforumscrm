@@ -23,17 +23,12 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabaseAuth = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-
-    const { data: claimsData, error: claimsError } = await supabaseAuth.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
+    const { data: { user: caller }, error: userError } = await supabaseAdmin.auth.getUser(token);
+    if (userError || !caller) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const callerId = claimsData.claims.sub;
+    const callerId = caller.id;
 
     // Check caller is super_admin
     const { data: callerRole } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", callerId).eq("role", "super_admin").single();
