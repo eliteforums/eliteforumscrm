@@ -26,6 +26,8 @@ import EmailsPage from "./pages/Emails";
 import WorkflowsPage from "./pages/Workflows";
 import AiAssistantPage from "./pages/AiAssistant";
 import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -88,6 +90,8 @@ const App = () => (
               <Route path="/audit-trail" element={<ProtectedRoute><AuditTrailPage /></ProtectedRoute>} />
               <Route path="/ai-assistant" element={<ProtectedRoute><AiAssistantPage /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>

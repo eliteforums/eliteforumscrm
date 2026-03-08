@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Zap } from "lucide-react";
 
 export function LandingFooter() {
@@ -12,7 +13,8 @@ export function LandingFooter() {
               </div>
               <span className="font-display font-bold text-foreground">Elite CRM</span>
             </div>
-            <p className="text-sm text-muted-foreground">Enterprise-grade CRM with PWA support. Manage contacts, track calls, and close deals from anywhere.</p>
+            <p className="text-sm text-muted-foreground mb-2">Enterprise-grade CRM with PWA support. Manage contacts, track calls, and close deals from anywhere.</p>
+            <p className="text-xs text-muted-foreground">A product by <a href="https://eliteforums.in" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Elite Forums</a></p>
           </div>
           <div>
             <h4 className="font-semibold text-sm text-foreground mb-3">Product</h4>
@@ -43,10 +45,13 @@ export function LandingFooter() {
           </div>
         </div>
         <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">© 2026 Elite CRM. All rights reserved.</p>
+          <div className="text-sm text-muted-foreground text-center md:text-left">
+            <p>© {new Date().getFullYear()} Elite CRM. All rights reserved.</p>
+            <p className="mt-1">A product by <a href="https://eliteforums.in" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Elite Forums</a></p>
+          </div>
           <div className="flex gap-6 text-sm text-muted-foreground">
-            <span className="hover:text-foreground cursor-pointer transition-colors">Privacy Policy</span>
-            <span className="hover:text-foreground cursor-pointer transition-colors">Terms of Service</span>
+            <Link to="/privacy-policy" className="hover:text-foreground transition-colors">Privacy Policy</Link>
+            <Link to="/terms-of-service" className="hover:text-foreground transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
