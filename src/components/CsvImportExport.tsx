@@ -145,13 +145,25 @@ export function CsvImportExport({ module, fields, data, onImport }: CsvImportExp
                 <p className="text-xs text-muted-foreground mt-1">Supports .csv files with headers</p>
               </div>
               <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={handleFile} />
-              <a
-                href={`/samples/sample-${module}.csv`}
-                download
-                className="flex items-center justify-center gap-1.5 text-xs text-primary hover:underline"
-              >
-                <Download className="w-3.5 h-3.5" /> Download sample CSV template
-              </a>
+              <div className="bg-secondary/50 rounded-lg p-3 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-foreground">Need a template?</p>
+                  <p className="text-xs text-muted-foreground">Download our sample {module} CSV with example data</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 shrink-0"
+                  onClick={() => {
+                    const link = document.createElement("a");
+                    link.href = `/samples/sample-${module}.csv`;
+                    link.download = `sample-${module}.csv`;
+                    link.click();
+                  }}
+                >
+                  <Download className="w-3.5 h-3.5" /> Sample CSV
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
