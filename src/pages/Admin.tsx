@@ -37,9 +37,23 @@ export default function AdminPage() {
     queryFn: async () => {
       const { data: roles, error } = await supabase
         .from("user_roles")
-        .select("*, profiles:user_id(full_name, avatar_url)");
+        .select("*");
       if (error) throw error;
-      return roles;
+
+      // Fetch profiles separately
+      const userIds = roles.map((r) => r.user_id);
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, avatar_url")
+        .in("user_id", userIds);
+
+      const profileMap: Record<string, any> = {};
+      profiles?.forEach((p) => { profileMap[p.user_id] = p; });
+
+      return roles.map((r) => ({
+        ...r,
+        profiles: profileMap[r.user_id] || null,
+      }));
     },
   });
 

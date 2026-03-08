@@ -23,6 +23,7 @@ interface UserWithRole {
   user_id: string;
   role: string;
   profiles: { full_name: string | null; avatar_url: string | null } | null;
+  [key: string]: any;
 }
 
 export function EmployeeActivityPanel({ users }: { users: UserWithRole[] }) {
