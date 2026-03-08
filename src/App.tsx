@@ -28,6 +28,7 @@ import AiAssistantPage from "./pages/AiAssistant";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import { CookieConsent } from "./components/CookieConsent";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -94,6 +95,7 @@ const App = () => (
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <CookieConsent />
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
