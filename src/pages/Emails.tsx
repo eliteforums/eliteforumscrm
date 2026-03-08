@@ -20,7 +20,7 @@ export default function EmailsPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
-  const [sending, setSending] = useState(false);
+  
 
   const { data: emails, isLoading } = useQuery({
     queryKey: ["emails", search, filter],
