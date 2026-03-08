@@ -264,21 +264,17 @@ export default function LeadsPage() {
 
         {showFilters && (
           <div className="flex flex-col gap-3 p-3 bg-card rounded-lg crm-shadow-card">
-            <div className="overflow-x-auto pb-1">
-              <div className="flex w-max items-center gap-2 whitespace-nowrap">
-                <span className="text-xs text-muted-foreground">Status:</span>
-                {["all", ...LEAD_STATUSES].map((s) => (
-                  <Button key={s} size="sm" variant={statusFilter === s ? "default" : "outline"} onClick={() => setStatusFilter(s)} className="text-xs h-7">{s === "all" ? "All" : s}</Button>
-                ))}
-              </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs text-muted-foreground">Status:</span>
+              {["all", ...LEAD_STATUSES].map((s) => (
+                <Button key={s} size="sm" variant={statusFilter === s ? "default" : "outline"} onClick={() => setStatusFilter(s)} className="text-xs h-7">{s === "all" ? "All" : s}</Button>
+              ))}
             </div>
-            <div className="overflow-x-auto pb-1">
-              <div className="flex w-max items-center gap-2 whitespace-nowrap">
-                <span className="text-xs text-muted-foreground">Source:</span>
-                {["all", ...LEAD_SOURCES].map((s) => (
-                  <Button key={s} size="sm" variant={sourceFilter === s ? "default" : "outline"} onClick={() => setSourceFilter(s)} className="text-xs h-7">{s === "all" ? "All" : s}</Button>
-                ))}
-              </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs text-muted-foreground">Source:</span>
+              {["all", ...LEAD_SOURCES].map((s) => (
+                <Button key={s} size="sm" variant={sourceFilter === s ? "default" : "outline"} onClick={() => setSourceFilter(s)} className="text-xs h-7">{s === "all" ? "All" : s}</Button>
+              ))}
             </div>
           </div>
         )}

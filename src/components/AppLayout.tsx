@@ -36,8 +36,8 @@ export function AppLayout({ children, title, actions }: AppLayoutProps) {
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
               </Button>
               {actions && (
-                <div className="min-w-0 flex-1 md:flex-none overflow-x-auto">
-                  <div className="flex w-max items-center gap-2 pr-1">{actions}</div>
+                <div className="min-w-0 flex-1 md:flex-none">
+                  <div className="flex flex-wrap items-center gap-2">{actions}</div>
                 </div>
               )}
             </div>

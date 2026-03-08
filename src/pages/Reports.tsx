@@ -196,11 +196,11 @@ export default function ReportsPage() {
         </div>
 
         <Tabs defaultValue="revenue">
-          <TabsList className="w-full justify-start overflow-x-auto">
-            <TabsTrigger value="revenue">Revenue</TabsTrigger>
-            <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
-            <TabsTrigger value="leads">Leads</TabsTrigger>
-            <TabsTrigger value="calls">Call Activity</TabsTrigger>
+          <TabsList className="w-full flex flex-wrap h-auto gap-1 p-1">
+            <TabsTrigger value="revenue" className="flex-1 min-w-[80px]">Revenue</TabsTrigger>
+            <TabsTrigger value="pipeline" className="flex-1 min-w-[80px]">Pipeline</TabsTrigger>
+            <TabsTrigger value="leads" className="flex-1 min-w-[80px]">Leads</TabsTrigger>
+            <TabsTrigger value="calls" className="flex-1 min-w-[80px]">Activity</TabsTrigger>
           </TabsList>
 
           <TabsContent value="revenue" className="mt-4">

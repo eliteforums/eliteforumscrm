@@ -157,15 +157,13 @@ export default function ContactsPage() {
         </div>
 
         {showFilters && (
-          <div className="overflow-x-auto pb-1">
-            <div className="flex items-center gap-2 p-3 bg-card rounded-lg crm-shadow-card w-max whitespace-nowrap">
-              <span className="text-xs text-muted-foreground">Source:</span>
-              {["all", ...LEAD_SOURCES].map((s) => (
-                <Button key={s} size="sm" variant={sourceFilter === s ? "default" : "outline"} onClick={() => setSourceFilter(s)} className="text-xs h-7">
-                  {s === "all" ? "All" : s}
-                </Button>
-              ))}
-            </div>
+          <div className="flex flex-wrap items-center gap-2 p-3 bg-card rounded-lg crm-shadow-card">
+            <span className="text-xs text-muted-foreground">Source:</span>
+            {["all", ...LEAD_SOURCES].map((s) => (
+              <Button key={s} size="sm" variant={sourceFilter === s ? "default" : "outline"} onClick={() => setSourceFilter(s)} className="text-xs h-7">
+                {s === "all" ? "All" : s}
+              </Button>
+            ))}
           </div>
         )}
 

@@ -158,14 +158,12 @@ export default function EmailsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input placeholder="Search emails..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
           </div>
-          <div className="overflow-x-auto pb-1">
-            <div className="flex w-max gap-2 whitespace-nowrap">
-              {["all", "Outbound", "Inbound"].map((d) => (
-                <Button key={d} size="sm" variant={filter === d ? "default" : "outline"} onClick={() => setFilter(d)} className="text-xs">
-                  {d === "all" ? "All" : d}
-                </Button>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {["all", "Outbound", "Inbound"].map((d) => (
+              <Button key={d} size="sm" variant={filter === d ? "default" : "outline"} onClick={() => setFilter(d)} className="text-xs">
+                {d === "all" ? "All" : d}
+              </Button>
+            ))}
           </div>
         </div>
 
