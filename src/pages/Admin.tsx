@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Shield, ShieldCheck, Users, User, Crown, Plus, Loader2, Eye, EyeOff, Mail, Lock, UserPlus } from "lucide-react";
+import { Shield, ShieldCheck, Users, User, Crown, Plus, Loader2, Eye, EyeOff, Mail, Lock, UserPlus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 
