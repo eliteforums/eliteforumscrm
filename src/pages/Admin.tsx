@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Shield, ShieldCheck, Users, User, Crown, Plus, Loader2, Eye, EyeOff, Mail, Lock, UserPlus } from "lucide-react";
+import { Shield, ShieldCheck, Users, User, Crown, Plus, Loader2, Eye, EyeOff, Mail, Lock, UserPlus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -92,7 +92,7 @@ export default function AdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-      toast.success("User created successfully! They can now log in with the provided credentials.");
+      toast.success("User created successfully!");
       setCreateOpen(false);
       setNewEmail("");
       setNewPassword("");
@@ -100,6 +100,31 @@ export default function AdminPage() {
       setNewRole("employee");
     },
     onError: (err: any) => toast.error(err.message || "Failed to create user"),
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const { data, error } = await supabase.functions.invoke("delete-user", {
+        body: { user_id: userId },
+      });
+
+      if (error) {
+        const functionContext = (error as { context?: { json?: () => Promise<{ error?: string }> } }).context;
+        if (functionContext?.json) {
+          const payload = await functionContext.json().catch(() => null);
+          throw new Error(payload?.error || error.message);
+        }
+        throw error;
+      }
+
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success("User deleted successfully");
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to delete user"),
   });
 
   if (!isSuperAdmin && !isAdmin) {
@@ -135,7 +160,7 @@ export default function AdminPage() {
         </div>
 
         {/* Create User Button - Super Admin only */}
-        {isSuperAdmin && (
+        {(isSuperAdmin || isAdmin) && (
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
             <DialogTrigger asChild>
               <Button className="gap-2">
@@ -233,14 +258,15 @@ export default function AdminPage() {
               <TableRow>
                 <TableHead>User</TableHead>
                 <TableHead>Current Role</TableHead>
-                {isSuperAdmin && <TableHead>Change Role</TableHead>}
+                <TableHead>Change Role</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">Loading users...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={4} className="text-center py-8 text-muted-foreground">Loading users...</TableCell></TableRow>
               ) : users?.length === 0 ? (
-                <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">No users found.</TableCell></TableRow>
+                <TableRow><TableCell colSpan={4} className="text-center py-8 text-muted-foreground">No users found.</TableCell></TableRow>
               ) : (
                 users?.map((u) => {
                   const config = roleConfig[u.role as AppRole] ?? roleConfig.employee;
@@ -264,8 +290,8 @@ export default function AdminPage() {
                           {config.label}
                         </Badge>
                       </TableCell>
-                      {isSuperAdmin && (
-                        <TableCell>
+                      <TableCell>
+                        {isSuperAdmin ? (
                           <select
                             value={u.role as string}
                             onChange={(e) => updateRoleMutation.mutate({ userId: u.user_id, newRole: e.target.value as AppRole })}
@@ -277,8 +303,27 @@ export default function AdminPage() {
                             <option value="manager">Manager</option>
                             <option value="employee">Employee</option>
                           </select>
-                        </TableCell>
-                      )}
+                        ) : (
+                          <span className="text-sm text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {u.user_id !== session?.user?.id && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => {
+                              if (confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
+                                deleteUserMutation.mutate(u.user_id);
+                              }
+                            }}
+                            disabled={deleteUserMutation.isPending}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </TableCell>
                     </TableRow>
                   );
                 })

@@ -30,10 +30,11 @@ serve(async (req) => {
 
     const callerId = caller.id;
 
-    // Check caller is super_admin
-    const { data: callerRole } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", callerId).eq("role", "super_admin").single();
-    if (!callerRole) {
-      return new Response(JSON.stringify({ error: "Only super admins can create users" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    // Check caller is super_admin or admin
+    const { data: callerRoles } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", callerId);
+    const callerRoleValue = callerRoles?.[0]?.role;
+    if (callerRoleValue !== "super_admin" && callerRoleValue !== "admin") {
+      return new Response(JSON.stringify({ error: "Only admins can create users" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
     const { email, password, full_name, role } = await req.json();
