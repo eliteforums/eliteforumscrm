@@ -289,8 +289,8 @@ export default function AdminPage() {
                           {config.label}
                         </Badge>
                       </TableCell>
-                      {isSuperAdmin && (
-                        <TableCell>
+                      <TableCell>
+                        {isSuperAdmin ? (
                           <select
                             value={u.role as string}
                             onChange={(e) => updateRoleMutation.mutate({ userId: u.user_id, newRole: e.target.value as AppRole })}
@@ -302,8 +302,27 @@ export default function AdminPage() {
                             <option value="manager">Manager</option>
                             <option value="employee">Employee</option>
                           </select>
-                        </TableCell>
-                      )}
+                        ) : (
+                          <span className="text-sm text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {u.user_id !== session?.user?.id && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            onClick={() => {
+                              if (confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
+                                deleteUserMutation.mutate(u.user_id);
+                              }
+                            }}
+                            disabled={deleteUserMutation.isPending}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </TableCell>
                     </TableRow>
                   );
                 })
