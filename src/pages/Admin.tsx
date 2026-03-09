@@ -160,7 +160,7 @@ export default function AdminPage() {
         </div>
 
         {/* Create User Button - Super Admin only */}
-        {isSuperAdmin && (
+        {(isSuperAdmin || isAdmin) && (
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
             <DialogTrigger asChild>
               <Button className="gap-2">
