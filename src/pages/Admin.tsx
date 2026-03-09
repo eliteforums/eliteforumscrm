@@ -92,7 +92,7 @@ export default function AdminPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-      toast.success("User created successfully! They can now log in with the provided credentials.");
+      toast.success("User created successfully!");
       setCreateOpen(false);
       setNewEmail("");
       setNewPassword("");
@@ -100,6 +100,31 @@ export default function AdminPage() {
       setNewRole("employee");
     },
     onError: (err: any) => toast.error(err.message || "Failed to create user"),
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: async (userId: string) => {
+      const { data, error } = await supabase.functions.invoke("delete-user", {
+        body: { user_id: userId },
+      });
+
+      if (error) {
+        const functionContext = (error as { context?: { json?: () => Promise<{ error?: string }> } }).context;
+        if (functionContext?.json) {
+          const payload = await functionContext.json().catch(() => null);
+          throw new Error(payload?.error || error.message);
+        }
+        throw error;
+      }
+
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success("User deleted successfully");
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to delete user"),
   });
 
   if (!isSuperAdmin && !isAdmin) {
