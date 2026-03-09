@@ -258,7 +258,8 @@ export default function AdminPage() {
               <TableRow>
                 <TableHead>User</TableHead>
                 <TableHead>Current Role</TableHead>
-                {isSuperAdmin && <TableHead>Change Role</TableHead>}
+                <TableHead>Change Role</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
