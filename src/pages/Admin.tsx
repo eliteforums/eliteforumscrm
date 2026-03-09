@@ -264,9 +264,9 @@ export default function AdminPage() {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">Loading users...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={4} className="text-center py-8 text-muted-foreground">Loading users...</TableCell></TableRow>
               ) : users?.length === 0 ? (
-                <TableRow><TableCell colSpan={3} className="text-center py-8 text-muted-foreground">No users found.</TableCell></TableRow>
+                <TableRow><TableCell colSpan={4} className="text-center py-8 text-muted-foreground">No users found.</TableCell></TableRow>
               ) : (
                 users?.map((u) => {
                   const config = roleConfig[u.role as AppRole] ?? roleConfig.employee;
